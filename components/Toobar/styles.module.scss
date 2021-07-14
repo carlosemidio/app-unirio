@@ -1,0 +1,60 @@
+.toobar {
+    background-color: #ffffff;
+    height: 60px;
+    width: 100%;
+    position: absolute;
+    top: 80px;
+    left: 0;
+}
+
+.toobarContainer {
+    display: flex!important;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+
+    .itemsLeft {
+        display: flex;
+        justify-content: flex-start;
+        width: 40%;
+
+        .editBTN {
+            margin-left: 20px;
+        }
+    }
+
+    .itemsRight {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 60%;
+   
+        .iconBTN {
+            cursor: pointer;
+        }
+
+        .siBTN {
+            border-radius: 50%;
+            color: #ffffff;
+            background-color:  #1f49c7;
+            padding: 10px;
+        }
+
+        .rBTN {
+            border: solid 2px #000000;
+            font-size: 32px;
+            padding: 2px 20px 2px 20px;
+        }
+
+        .aBTN {
+            font-size: 32px;
+            cursor: pointer;
+        }
+
+        .criteriaBTN {
+            border: solid 2px #000000;
+            font-size: 16px;
+            padding: 12px 20px 12px 20px;
+        }
+    }
+}
