@@ -43,27 +43,24 @@ export default [
   },
   {
     id: '5',
+    type: 'ACGNode',
     data: {
-      label: 'Node id: 5',
+      text: 'A organização investe em informação documentada.',
     },
     position: { x: 250, y: 325 },
   },
   {
     id: '6',
-    type: 'output',
+    type: 'ACENode',
     data: {
-      label: (
-        <>
-          An <strong>output node</strong>
-        </>
-      ),
+      text: 'Adotar estratégia(s) para explicitar o entendimento de seu ambiente de negócio.',
     },
     position: { x: 100, y: 480 },
   },
   {
     id: '7',
-    type: 'output',
-    data: { label: 'Another output node' },
+    type: 'ACRNode',
+    data: { text: 'A organização estabelece os processos necessários para gestão e sua aplicação.' },
     position: { x: 400, y: 450 },
   },
   { id: 'e1-2', source: '1', target: '2', label: 'this is an edge label' },

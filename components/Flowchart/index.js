@@ -12,6 +12,9 @@ import initialElements from './initial-elements';
 import CustomEdge from './CustomEdge';
 import SiNode from './Nodes/SINode';
 import ActorNode from './Nodes/ActorNode';
+import ACGNode from './Nodes/ACGNode';
+import ACENode from './Nodes/ACENode';
+import ACRNode from './Nodes/ACRNode';
 
 const onLoad = (reactFlowInstance) => {
   console.log('flow loaded:', reactFlowInstance);
@@ -24,7 +27,10 @@ const edgeTypes = {
 
 const nodeTypes = {
   SiNode: SiNode,
-  ActorNode: ActorNode
+  ActorNode: ActorNode,
+  ACGNode: ACGNode,
+  ACENode: ACENode,
+  ACRNode: ACRNode,
 };
 
 
