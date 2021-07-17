@@ -1,9 +1,11 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import Header from '../components/Header'
+import Toobar from '../components/Toobar'
+import OverviewFlow from '../components/Flowchart'
+
 import styles from '../styles/Home.module.css'
 import { Container } from '@material-ui/core'
-import Toobar from '../components/Toobar'
 
 export default function Home() {
   return (
@@ -17,8 +19,8 @@ export default function Home() {
       <Header />
       <Toobar />
 
-      <main className={styles.main}>
-        <h1>Hello world</h1>
+      <main className={styles.main} style={{ width: '100%', height: '100%' }}>
+        <OverviewFlow />
       </main>
 
       <footer className={styles.footer}>
