@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import Header from '../components/Header'
-import Toobar from '../components/Toobar'
+import { ReactFlowProvider } from 'react-flow-renderer'
 import OverviewFlow from '../components/Flowchart'
 
 import styles from '../styles/Home.module.css'
@@ -17,10 +17,11 @@ export default function Home() {
       </Head>
 
       <Header />
-      <Toobar />
 
       <main className={styles.main} style={{ width: '100%', height: '100%' }}>
-        <OverviewFlow />
+        <ReactFlowProvider>
+          <OverviewFlow />
+        </ReactFlowProvider>
       </main>
 
       <footer className={styles.footer}>

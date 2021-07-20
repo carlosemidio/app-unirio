@@ -15,7 +15,7 @@ export default memo(({ data }) => {
       
       <span style={{ color: '#000000', padding: 10}}>
         <AccessibilityNewIcon />
-        {data?.actor?.name}
+        {data?.title}
       </span>
       <Handle
         type="source"

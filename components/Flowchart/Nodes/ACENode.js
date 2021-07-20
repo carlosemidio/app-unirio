@@ -13,7 +13,7 @@ export default memo(({ data }) => {
         onConnect={(params) => console.log('handle onConnect', params)}
       />
       <div style={{ border: '1px solid #000000', backgroundColor: '#ffd633', padding: 10 }}>
-        <strong>{data.text}</strong>
+        <strong>{data.title}</strong>
       </div>
       <Handle
         type="source"

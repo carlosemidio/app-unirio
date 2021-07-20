@@ -5,19 +5,19 @@ import React from 'react'
 
 import styles from "./styles.module.scss"
 
-const Toobar: React.FC = () => {
+const Toobar = ({onSave, onRestore, onAdd}) => {
     return (
         <div className={styles.toobar}>
             <Container className={styles.toobarContainer}>
                 <div className={styles.itemsLeft}>
-                    <SaveIcon fontSize="large" />
-                    <FaEdit fontSize={32} className={styles.editBTN} />
+                    <SaveIcon fontSize="large" onClick={onSave} />
+                    <FaEdit fontSize={32} className={styles.editBTN} onClick={onRestore} />
                 </div>
                 <div className={styles.itemsRight}>
-                    <button className={styles.siBTN}>SI</button>
-                    <GroupIcon fontSize="large" className={styles.iconBTN} />
-                    <button className={styles.rBTN}>R</button>
-                    <span className={styles.aBTN}>A</span>
+                    <button className={styles.siBTN} onClick={onAdd('SiNode', 'New SiNode')}>SI</button>
+                    <GroupIcon fontSize="large" className={styles.iconBTN} onClick={onAdd('ActorNode', 'New ActorNode')} />
+                    <button className={styles.rBTN} onClick={onAdd('VRNode', 'New VRNode')}>R</button>
+                    <span className={styles.aBTN} onClick={onAdd('TextNode', 'New TextNode')}>A</span>
                     <ArrowBackIcon fontSize="large" className={styles.iconBTN} /> 
                     <button className={styles.criteriaBTN}>Acountability Criteria</button>
                 </div>

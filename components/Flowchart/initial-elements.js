@@ -5,9 +5,7 @@ export default [
     id: '1',
     type: 'SiNode',
     data: {
-        system: {
-            title: "SOFIA",
-        }
+      title: "SOFIA",
     },
     position: { x: 250, y: 0 },
   },
@@ -15,9 +13,7 @@ export default [
     id: '2',
     type: 'SiNode',
     data: {
-        system: {
-            title: "QADAD",
-        }
+      title: "QADAD",
     },
     position: { x: 100, y: 100 },
   },
@@ -25,9 +21,7 @@ export default [
     id: '3',
     type: 'ActorNode',
     data: {
-        actor: {
-            name: "Aluno",
-        }
+      title: "Aluno",
     },
     position: { x: 400, y: 100 },
   },
@@ -36,16 +30,14 @@ export default [
     position: { x: 250, y: 200 },
     type: 'ActorNode',
     data: {
-        actor: {
-            name: "Professor",
-        }
+      title: "Professor",
     },
   },
   {
     id: '5',
     type: 'ACGNode',
     data: {
-      text: 'A organização investe em informação documentada.',
+      title: 'A organização investe em informação documentada.',
     },
     position: { x: 250, y: 325 },
   },
@@ -53,15 +45,31 @@ export default [
     id: '6',
     type: 'ACENode',
     data: {
-      text: 'Adotar estratégia(s) para explicitar o entendimento de seu ambiente de negócio.',
+      title: 'Adotar estratégia(s) para explicitar o entendimento de seu ambiente de negócio.',
     },
     position: { x: 100, y: 480 },
   },
   {
     id: '7',
     type: 'ACRNode',
-    data: { text: 'A organização estabelece os processos necessários para gestão e sua aplicação.' },
+    data: { title: 'A organização estabelece os processos necessários para gestão e sua aplicação.' },
     position: { x: 400, y: 450 },
+  },
+  {
+    id: '8',
+    type: 'TextNode',
+    data: {
+      title: "A node",
+    },
+    position: { x: 300, y: 100 },
+  },
+  {
+    id: '9',
+    type: 'VRNode',
+    data: {
+      title: "VR node",
+    },
+    position: { x: 500, y: 100 },
   },
   { id: 'e1-2', source: '1', target: '2', label: 'this is an edge label' },
   { id: 'e1-3', source: '1', target: '3' },
@@ -97,4 +105,6 @@ export default [
     animated: false,
     labelStyle: { fill: '#f6ab6c', fontWeight: 700 },
   },
+  { id: 'e6-7', source: '8', target: '3', label: 'this is an edge label' },
+  { id: 'e7-8', source: '4', target: '9', label: 'this is an edge label' },
 ];

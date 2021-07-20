@@ -11,7 +11,7 @@ export default memo(({ data }) => {
         style={{ background: '#555' }}
         onConnect={(params) => console.log('handle onConnect', params)}
       />
-      <span style={{ borderRadius: '50%', color: '#ffffff', backgroundColor:  '#1f49c7', padding: 10}}>{data?.system?.title}</span>
+      <span style={{ borderRadius: '50%', color: '#ffffff', backgroundColor:  '#1f49c7', padding: 10}}>{data?.title}</span>
       <Handle
         type="source"
         position="right"
