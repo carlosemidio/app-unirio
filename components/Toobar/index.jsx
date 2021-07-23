@@ -1,11 +1,16 @@
 import { Container } from '@material-ui/core'
 import {Save as SaveIcon, ArrowBack as ArrowBackIcon, Group as GroupIcon } from '@material-ui/icons'
-import { FaEdit } from "react-icons/Fa"
+import { FaEdit } from 'react-icons/fa'
 import React from 'react'
 
 import styles from "./styles.module.scss"
 
-const Toobar = ({onSave, onRestore, onAdd}) => {
+const Toobar = ({onSave, onRestore}) => {
+    const onDragStart = (event, nodeType) => {
+        event.dataTransfer.setData('application/reactflow', nodeType);
+        event.dataTransfer.effectAllowed = 'move';
+    };
+
     return (
         <div className={styles.toobar}>
             <Container className={styles.toobarContainer}>
@@ -14,11 +19,12 @@ const Toobar = ({onSave, onRestore, onAdd}) => {
                     <FaEdit fontSize={32} className={styles.editBTN} onClick={onRestore} />
                 </div>
                 <div className={styles.itemsRight}>
-                    <button className={styles.siBTN} onClick={onAdd('SiNode', 'New SiNode')}>SI</button>
-                    <GroupIcon fontSize="large" className={styles.iconBTN} onClick={onAdd('ActorNode', 'New ActorNode')} />
-                    <button className={styles.rBTN} onClick={onAdd('VRNode', 'New VRNode')}>R</button>
-                    <span className={styles.aBTN} onClick={onAdd('TextNode', 'New TextNode')}>A</span>
-                    <ArrowBackIcon fontSize="large" className={styles.iconBTN} /> 
+                    <button className={styles.siBTN} onDragStart={(event) => onDragStart(event, 'SiNode')} draggable>SI</button>
+                    <div onDragStart={(event) => onDragStart(event, 'ActorNode')} draggable>
+                        <GroupIcon fontSize="large" className={styles.iconBTN}/>
+                    </div>
+                    <button className={styles.rBTN} onDragStart={(event) => onDragStart(event, 'VRNode')} draggable>R</button>
+                    <span className={styles.aBTN} onDragStart={(event) => onDragStart(event, 'TextNode')} draggable>A</span>
                     <button className={styles.criteriaBTN}>Acountability Criteria</button>
                 </div>
             </Container>

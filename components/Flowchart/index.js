@@ -1,4 +1,7 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
+import Modal from '@material-ui/core/Modal';
+import Backdrop from '@material-ui/core/Backdrop';
+import Fade from '@material-ui/core/Fade';
 import ReactFlow, {
   removeElements,
   addEdge,
@@ -7,16 +10,16 @@ import ReactFlow, {
   Controls,
   Background,
 } from 'react-flow-renderer';
-import initialElements from './initial-elements';
 import CustomEdge from './CustomEdge';
-import SiNode from './Nodes/SINode';
+import SiNode from './Nodes/SiNode';
 import ActorNode from './Nodes/ActorNode';
 import ACGNode from './Nodes/ACGNode';
 import ACENode from './Nodes/ACENode';
 import ACRNode from './Nodes/ACRNode';
 import TextNode from './Nodes/TextNode';
 import VRNode from './Nodes/VRNode';
-import Toobar from '../Toobar'
+import SIForm from '../SIForm';
+import Toobar from '../Toobar';
 
 import localforage from 'localforage';
 
@@ -43,14 +46,52 @@ const edgeTypes = {
 
 const flowKey = 'app-unirio';
 
-const getNodeId = () => `flownode_${+new Date()}`;
+let id = 0;
+const getId = () => `node_${id++}`;
 
 const SaveRestore = () => {
+    const reactFlowWrapper = useRef(null);
     const [rfInstance, setRfInstance] = useState(null);
     const [elements, setElements] = useState([]);
     const onElementsRemove = (elementsToRemove) =>
         setElements((els) => removeElements(elementsToRemove, els));
     const onConnect = (params) => setElements((els) => addEdge(params, els));
+
+    const [openModal, setOpenModal] = useState(false);
+
+    const handleOpenModal = () => {
+        setOpenModal( true );
+    }
+    
+    const handleCloseModal = () => {
+        setOpenModal( false );
+    }
+
+    const onDragOver = (event) => {
+        event.preventDefault();
+        event.dataTransfer.dropEffect = 'move';
+    };
+
+    const onDrop = (event) => {
+        event.preventDefault();
+
+        setOpenModal(true);
+
+        const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
+        const type = event.dataTransfer.getData('application/reactflow');
+        const position = rfInstance.project({
+            x: event.clientX - reactFlowBounds.left,
+            y: event.clientY - reactFlowBounds.top,
+        });
+        const newNode = {
+            id: getId(),
+            type,
+            position,
+            data: { title: `${type}` },
+        };
+
+        setElements((es) => es.concat(newNode));
+    };
 
     const { transform } = useZoomPanHelper();
 
@@ -60,12 +101,14 @@ const SaveRestore = () => {
         if (rfInstance) {
             const flow = rfInstance.toObject();
             localforage.setItem(flowKey, flow);
+            localforage.setItem('nodesId', id);
         }
     }, [rfInstance]);
 
     const onRestore = useCallback(() => {
         const restoreFlow = async () => {
             const flow = await localforage.getItem(flowKey);
+            id = await localforage.getItem('nodesId');
 
             if (flow) {
                 const [x = 0, y = 0] = flow.position;
@@ -77,21 +120,8 @@ const SaveRestore = () => {
         restoreFlow();
     }, [setElements, transform]);
 
-    const onAdd = useCallback((type, title) => () => {
-        const newNode = {
-            id: getNodeId(),
-            type: type,
-            data: { title: title },
-            position: {
-                x: Math.random() * window.innerWidth - 100,
-                y: Math.random() * window.innerHeight,
-            },
-        };
-        setElements((els) => els.concat(newNode));
-    }, [setElements]);
-
     return (
-        <div style={{ width: '100%', height: '100%' }}>
+        <div style={{ width: '100%', height: '100%' }} ref={reactFlowWrapper}>
             <ReactFlow
                 elements={elements}
                 onElementsRemove={onElementsRemove}
@@ -101,11 +131,31 @@ const SaveRestore = () => {
                 nodeTypes={nodeTypes}
                 snapToGrid={true}
                 snapGrid={[15, 15]}
+                onDrop={onDrop}
+                onDragOver={onDragOver}
             >
                 <Controls />
                 <Background color="#aaa" gap={16} />
             </ReactFlow>
-            <Toobar onSave={onSave} onRestore={onRestore} onAdd={onAdd} />
+            <Toobar onSave={onSave} onRestore={onRestore} />
+            <Modal
+                aria-labelledby="transition-modal-title"
+                aria-describedby="transition-modal-description"
+                className={styles.modal}
+                open={openModal}
+                onClose={handleCloseModal}
+                closeAfterTransition
+                BackdropComponent={Backdrop}
+                BackdropProps={{
+                timeout: 500,
+                }}
+            >
+                <>
+                    <Fade in={openModal}>
+                        <SIForm/>
+                    </Fade>
+                </>
+            </Modal>
         </div>
     );
 };
