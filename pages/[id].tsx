@@ -1,13 +1,17 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import Header from '../components/Header'
-import { ReactFlowProvider } from 'react-flow-renderer'
-import OverviewFlow from '../components/Flowchart'
+import Head from 'next/head';
+import Image from 'next/image';
+import Header from '../components/Header';
+import { ReactFlowProvider } from 'react-flow-renderer';
+import OverviewFlow from '../components/Flowchart';
+import { GetServerSideProps } from 'next';
 
 import styles from '../styles/Home.module.css'
-import { Container } from '@material-ui/core'
 
-export default function Home() {
+interface IProps {
+  project?: Object;
+}
+
+const Home: React.FC<IProps> = ({project}) => {
   return (
     <div className={styles.container}>
       <Head>
@@ -20,7 +24,7 @@ export default function Home() {
 
       <main className={styles.main} style={{ width: '100%', height: '100%' }}>
         <ReactFlowProvider>
-          <OverviewFlow />
+          <OverviewFlow project={project} />
         </ReactFlowProvider>
       </main>
 
@@ -38,4 +42,22 @@ export default function Home() {
       </footer>
     </div>
   )
+}
+
+export default Home;
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const id = ctx?.params?.id;
+
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/projetos/${id}`
+  );
+
+  const project = await res.json();
+
+  return {
+    props: {
+      project
+    }
+  };
 }

@@ -16,28 +16,17 @@ import * as yup from 'yup';
 import styles from "./styles.module.scss";
 
 const validationsForm = {
-  name: yup.string().required('O nome é obrigatório'),
-  email: yup
-    .string()
-    .email('Informe um email válido')
-    .required('O email é obrigatório'),
-  company: yup.string(),
-  phone: yup
-    .string()
-    .min(14, 'O telefone precisa ter pelo menos 8 caracteres')
-    .max(15, 'O telefone precisa ter no máximo 9 caracteres')
-    .required('Informe um telefome'),
-  value: yup.string().required('Informe um valor'),
+  projeto: yup.number().required('O projeto é obrigatório'),
+  sistema: yup.number().required('O sistema é obrigatório'),
+  nome: yup.string().required('O nome é obrigatório'),
 };
 
 // Shape of form values
 interface FormValues {
-  name?: string;
-  cpf?: string;
-  email?: string;
-  company?: string;
-  phone?: string;
-  value?: string;
+  projeto: number;
+  sistema: number;
+  nome: string;
+  options: Object;
 }
 
 const form = (props: FormikProps<FormValues>) => {
@@ -55,92 +44,29 @@ const form = (props: FormikProps<FormValues>) => {
 
   const [mask, setMask] = useState('(99) 99999-9999');
 
-  const options = [
-    // {
-    //   value: '32d70bcb-239a-4a14-97d5-b086cf8ee15b',
-    //   name: 'R$ 5,00',
-    // },
-    // {
-    //   value: 'e459ca85-1f81-4018-b4b9-1f177de34532',
-    //   name: 'R$ 10,00',
-    // },
-    {
-      value: 'R$ 20,00',
-      name: 'R$ 20,00',
-    },
-    {
-      value: 'R$ 50,00',
-      name: 'R$ 50,00',
-    },
-    {
-      value: 'R$ 100,00',
-      name: 'R$ 100,00',
-    },
-    {
-      value: 'R$ 200,00',
-      name: 'R$ 200,00',
-    },
-    {
-      value: 'R$ 300,00',
-      name: 'R$ 300,00',
-    },
-  ];
-
   return (
     <div className={styles.container}>
       <form onSubmit={handleSubmit}>
         <Card className={styles.card}>
           <CardContent>
             <TextField
-              id="name"
-              label="Nome"
-              value={values.name}
+              id="nome"
+              label="Sistema Responsável"
+              value={values.nome}
               onChange={handleChange}
               onBlur={handleBlur}
-              helperText={touched.name ? errors.name : ''}
-              error={touched.name && Boolean(errors.name)}
+              helperText={touched.nome ? errors.nome : ''}
+              error={touched.nome && Boolean(errors.nome)}
               margin="dense"
               variant="outlined"
               fullWidth
             />
             <TextField
-              id="cpf"
-              label="CPF"
-              type="cpf"
-              inputProps={{
-                minLength: 11,
-                maxLength: 11,
-              }}
-              value={values.cpf}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              helperText={touched.cpf ? errors.cpf : ''}
-              error={touched.cpf && Boolean(errors.cpf)}
-              margin="dense"
-              variant="outlined"
-              fullWidth
-            />
-            <TextField
-              id="email"
-              label="Email"
-              type="email"
-              value={values.email}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              helperText={touched.email ? errors.email : ''}
-              error={touched.email && Boolean(errors.email)}
-              margin="dense"
-              variant="outlined"
-              fullWidth
-            />
-            <TextField
-              id="company"
-              label="Empresa"
-              value={values.company}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              helperText={touched.company ? errors.company : ''}
-              error={touched.company && Boolean(errors.company)}
+              id="projeto"
+              label="Projeto"
+              type="text"
+              value={values.projeto}
+              error={touched.projeto && Boolean(errors.projeto)}
               margin="dense"
               variant="outlined"
               fullWidth
@@ -150,19 +76,19 @@ const form = (props: FormikProps<FormValues>) => {
               className={styles.formControl}
               fullWidth
             >
-              <InputLabel id="select-category-label">Valor</InputLabel>
+              <InputLabel id="select-system-label">Sistema Relacionado</InputLabel>
               <Select
-                id="value"
-                labelId="select-category-label"
-                value={values.value}
-                label="Valor"
-                onChange={(event) => setFieldValue('value', event.target.value)}
+                id="sistema"
+                labelId="select-system-label"
+                value={values.sistema}
+                label="Sistema Relacionado"
+                onChange={(event) => setFieldValue('sistema', event.target.value)}
                 onBlur={handleBlur}
-                error={touched.value && Boolean(errors.value)}
+                error={touched.sistema && Boolean(errors.sistema)}
               >
-                {options.map((category) => (
-                  <MenuItem key={category.value} value={category.value}>
-                    {category.name}
+                {values?.options?.map((system) => (
+                  <MenuItem key={system.value} value={system.value}>
+                    {system.name}
                   </MenuItem>
                 ))}
               </Select>
@@ -183,23 +109,19 @@ const form = (props: FormikProps<FormValues>) => {
 };
 
 interface MyFormProps {
-  name?: string;
-  cpf?: string;
-  email?: string;
-  company?: string;
-  phone?: string;
-  value?: string;
+  projeto: number;
+  sistema: number;
+  nome: string;
+  options: Object;
 }
 
 const Form = withFormik<MyFormProps, FormValues>({
-  mapPropsToValues: ({ name, cpf, email, company, phone, value }) => {
+  mapPropsToValues: ({ projeto, sistema, nome, options }) => {
     return {
-      name: name || '',
-      cpf: cpf || '',
-      email: email || '',
-      company: company || '',
-      phone: phone || '',
-      value: value || '',
+      projeto: projeto,
+      sistema: sistema || '',
+      nome: nome || '',
+      options: options || [],
     };
   },
 
@@ -214,7 +136,7 @@ const Form = withFormik<MyFormProps, FormValues>({
         body: JSON.stringify(values),
       };
 
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/doador`, requestOptions)
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/sistemas/`, requestOptions)
         .then((response) => response.json())
         .then((data) => {
           setSubmitting(false);

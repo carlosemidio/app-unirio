@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
@@ -24,6 +24,7 @@ import Toobar from '../Toobar';
 import localforage from 'localforage';
 
 import styles from "./styles.module.scss";
+import { DvrSharp } from '@material-ui/icons';
 
 localforage.config({
   name: 'react-flow-docs',
@@ -48,13 +49,13 @@ const flowKey = 'app-unirio';
 
 let id = 0;
 const getId = () => `node_${id++}`;
+let data = [];
 
-const SaveRestore = () => {
+const SaveRestore = ({project}) => {
     const reactFlowWrapper = useRef(null);
     const [rfInstance, setRfInstance] = useState(null);
     const [elements, setElements] = useState([]);
-    const onElementsRemove = (elementsToRemove) =>
-        setElements((els) => removeElements(elementsToRemove, els));
+    const onElementsRemove = (elementsToRemove) => setElements((els) => removeElements(elementsToRemove, els));
     const onConnect = (params) => setElements((els) => addEdge(params, els));
 
     const [openModal, setOpenModal] = useState(false);
@@ -83,6 +84,7 @@ const SaveRestore = () => {
             x: event.clientX - reactFlowBounds.left,
             y: event.clientY - reactFlowBounds.top,
         });
+        
         const newNode = {
             id: getId(),
             type,
@@ -120,6 +122,12 @@ const SaveRestore = () => {
         restoreFlow();
     }, [setElements, transform]);
 
+    useEffect(async () => {
+        data['systems'] = project.sistemas.map(system => {
+            return {name: system?.nome, value: system.id};
+        });
+    });
+
     return (
         <div style={{ width: '100%', height: '100%' }} ref={reactFlowWrapper}>
             <ReactFlow
@@ -152,7 +160,7 @@ const SaveRestore = () => {
             >
                 <>
                     <Fade in={openModal}>
-                        <SIForm/>
+                        <SIForm projeto={project.pk} options={data['systems']}/>
                     </Fade>
                 </>
             </Modal>
