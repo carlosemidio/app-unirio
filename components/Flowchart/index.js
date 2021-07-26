@@ -21,6 +21,7 @@ import VRNode from './Nodes/VRNode';
 import SIForm from '../SIForm';
 import ActorForm from '../ActorForm';
 import VRForm from '../VRForm';
+import TextForm from '../TextForm';
 import Toobar from '../Toobar';
 
 import localforage from 'localforage';
@@ -96,7 +97,14 @@ const SaveRestore = ({project}) => {
             item: vr
         };
 
-        console.log(vr);
+        setElements((es) => es.concat(currentNode));
+        handleCloseModal();
+    }
+
+    const handleNewText = (vr) => {
+        currentNode.data = { 
+            title: `${vr}`,
+        };
 
         setElements((es) => es.concat(currentNode));
         handleCloseModal();
@@ -177,7 +185,7 @@ const SaveRestore = ({project}) => {
                 );
             case 'TextNode':
                 return (
-                    <SIForm projeto={project.pk} options={data['systems']} handleNewSystem={handleNewSystem} />
+                    <TextForm handleNewText={handleNewText} />
                 );
             default:
                 return <></>;
