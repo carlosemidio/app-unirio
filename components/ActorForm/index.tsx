@@ -17,7 +17,7 @@ import styles from "./styles.module.scss";
 
 const validationsForm = {
   projeto: yup.number().required('O projeto é obrigatório'),
-  sistema: yup.number().required('O sistema é obrigatório'),
+  ator: yup.number().required('O ator relacionado é obrigatório'),
   nome: yup.string().required('O nome é obrigatório'),
 };
 
@@ -29,10 +29,10 @@ interface Option {
 // Shape of form values
 interface FormValues {
   projeto: string;
-  sistema: string;
+  ator: string;
   nome: string;
   options: Array<Option>;
-  handleNewSystem: (data: Object) => null;
+  handleNewActor: (data: Object) => null;
 }
 
 const form = (props: FormikProps<FormValues>) => {
@@ -55,7 +55,7 @@ const form = (props: FormikProps<FormValues>) => {
           <CardContent>
             <TextField
               id="nome"
-              label="Sistema Responsável"
+              label="Ator Responsável"
               value={values.nome}
               onChange={handleChange}
               onBlur={handleBlur}
@@ -80,15 +80,15 @@ const form = (props: FormikProps<FormValues>) => {
               className={styles.formControl}
               fullWidth
             >
-              <InputLabel id="select-system-label">Sistema Relacionado</InputLabel>
+              <InputLabel id="select-system-label">Ator Relacionado</InputLabel>
               <Select
-                id="sistema"
+                id="ator"
                 labelId="select-system-label"
-                value={values.sistema}
-                label="Sistema Relacionado"
-                onChange={(event) => setFieldValue('sistema', event.target.value)}
+                value={values.ator}
+                label="Ator Relacionado"
+                onChange={(event) => setFieldValue('ator', event.target.value)}
                 onBlur={handleBlur}
-                error={touched.sistema && Boolean(errors.sistema)}
+                error={touched.ator && Boolean(errors.ator)}
               >
                 {values?.options?.map((system) => (
                   <MenuItem key={system.value} value={system.value}>
@@ -114,27 +114,27 @@ const form = (props: FormikProps<FormValues>) => {
 
 interface MyFormProps {
   projeto: string;
-  sistema: string;
+  ator: string;
   nome: string;
   options: Array<Option>;
-  handleNewSystem: (data: Object) => null;
+  handleNewActor: (data: Object) => null;
 }
 
 const Form = withFormik<MyFormProps, FormValues>({
-  mapPropsToValues: ({ projeto, sistema, nome, options, handleNewSystem }) => {
+  mapPropsToValues: ({ projeto, ator, nome, options, handleNewActor }) => {
     return {
       projeto: projeto,
-      sistema: sistema || '',
+      ator: ator || '',
       nome: nome || '',
       options: options || [],
-      handleNewSystem: handleNewSystem,
+      handleNewActor: handleNewActor,
     };
   },
 
   validationSchema: yup.object().shape(validationsForm),
 
   handleSubmit: (values, { props, setSubmitting, resetForm }) => {
-    const { handleNewSystem } = props;
+    const { handleNewActor } = props;
 
     setTimeout(() => {
       // submit to the server
@@ -144,12 +144,12 @@ const Form = withFormik<MyFormProps, FormValues>({
         body: JSON.stringify(values),
       };
 
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/sistemas/`, requestOptions)
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/atores/`, requestOptions)
         .then((response) => response.json())
         .then((data) => {
           setSubmitting(false);
           resetForm();
-          handleNewSystem(data);
+          handleNewActor(data);
         });
     }, 1000);
   },

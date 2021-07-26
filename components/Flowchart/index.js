@@ -19,12 +19,13 @@ import ACRNode from './Nodes/ACRNode';
 import TextNode from './Nodes/TextNode';
 import VRNode from './Nodes/VRNode';
 import SIForm from '../SIForm';
+import ActorForm from '../ActorForm';
+import VRForm from '../VRForm';
 import Toobar from '../Toobar';
 
 import localforage from 'localforage';
 
 import styles from "./styles.module.scss";
-import { DvrSharp } from '@material-ui/icons';
 
 localforage.config({
   name: 'react-flow-docs',
@@ -50,6 +51,7 @@ const flowKey = 'app-unirio';
 let id = 0;
 const getId = () => `node_${id++}`;
 let data = [];
+let currentNode = null;
 
 const SaveRestore = ({project}) => {
     const reactFlowWrapper = useRef(null);
@@ -66,6 +68,38 @@ const SaveRestore = ({project}) => {
     
     const handleCloseModal = () => {
         setOpenModal( false );
+    }
+
+    const handleNewSystem = (sistema) => {
+        currentNode.data = { 
+            title: `${sistema.nome}`,
+            item: sistema
+        };
+
+        setElements((es) => es.concat(currentNode));
+        handleCloseModal();
+    }
+
+    const handleNewActor = (ator) => {
+        currentNode.data = { 
+            title: `${ator.nome}`,
+            item: ator
+        };
+
+        setElements((es) => es.concat(currentNode));
+        handleCloseModal();
+    }
+
+    const handleNewVR = (vr) => {
+        currentNode.data = { 
+            title: `${vr.descricao}`,
+            item: vr
+        };
+
+        console.log(vr);
+
+        setElements((es) => es.concat(currentNode));
+        handleCloseModal();
     }
 
     const onDragOver = (event) => {
@@ -85,14 +119,11 @@ const SaveRestore = ({project}) => {
             y: event.clientY - reactFlowBounds.top,
         });
         
-        const newNode = {
+        currentNode = {
             id: getId(),
             type,
             position,
-            data: { title: `${type}` },
         };
-
-        setElements((es) => es.concat(newNode));
     };
 
     const { transform } = useZoomPanHelper();
@@ -122,11 +153,36 @@ const SaveRestore = ({project}) => {
         restoreFlow();
     }, [setElements, transform]);
 
-    useEffect(async () => {
-        data['systems'] = project.sistemas.map(system => {
-            return {name: system?.nome, value: system.id};
-        });
-    });
+    function switchForm() {
+        const type = currentNode?.type;
+
+        switch(type) {
+            case 'SiNode':
+                return (
+                    <SIForm projeto={project.pk} options={ project.sistemas.map(system => {
+                        return {name: system?.nome, value: system.id};
+                    }) } handleNewSystem={handleNewSystem} />
+                );
+            case 'ActorNode':
+                return (
+                    <ActorForm projeto={project.pk} options={project.atores.map(system => {
+                        return {name: system?.nome, value: system.id};
+                    })} handleNewActor={handleNewActor} />
+                );
+            case 'VRNode':
+                return (
+                    <VRForm projeto={project.pk} options={project.tarefas.map(tarefa => {
+                        return {name: tarefa?.nome, value: tarefa.id};
+                    })} handleNewVR={handleNewVR} />
+                );
+            case 'TextNode':
+                return (
+                    <SIForm projeto={project.pk} options={data['systems']} handleNewSystem={handleNewSystem} />
+                );
+            default:
+                return <></>;
+        }
+    }
 
     return (
         <div style={{ width: '100%', height: '100%' }} ref={reactFlowWrapper}>
@@ -160,7 +216,7 @@ const SaveRestore = ({project}) => {
             >
                 <>
                     <Fade in={openModal}>
-                        <SIForm projeto={project.pk} options={data['systems']}/>
+                        { switchForm() }
                     </Fade>
                 </>
             </Modal>

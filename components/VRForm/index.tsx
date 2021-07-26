@@ -17,22 +17,16 @@ import styles from "./styles.module.scss";
 
 const validationsForm = {
   projeto: yup.number().required('O projeto é obrigatório'),
-  sistema: yup.number().required('O sistema é obrigatório'),
-  nome: yup.string().required('O nome é obrigatório'),
+  descricao: yup.string().required('A descrição é obrigatória'),
 };
-
-interface Option {
-  name: string;
-  value:string;
-}
 
 // Shape of form values
 interface FormValues {
   projeto: string;
-  sistema: string;
-  nome: string;
+  tarefa: string;
   options: Array<Option>;
-  handleNewSystem: (data: Object) => null;
+  descricao: string;
+  handleNewVR: (data: Object) => null;
 }
 
 const form = (props: FormikProps<FormValues>) => {
@@ -54,13 +48,13 @@ const form = (props: FormikProps<FormValues>) => {
         <Card className={styles.card}>
           <CardContent>
             <TextField
-              id="nome"
-              label="Sistema Responsável"
-              value={values.nome}
+              id="descricao"
+              label="Descrição do Vértice de Responsabilidade"
+              value={values.descricao}
               onChange={handleChange}
               onBlur={handleBlur}
-              helperText={touched.nome ? errors.nome : ''}
-              error={touched.nome && Boolean(errors.nome)}
+              helperText={touched.descricao ? errors.descricao : ''}
+              error={touched.descricao && Boolean(errors.descricao)}
               margin="dense"
               variant="outlined"
               fullWidth
@@ -73,6 +67,7 @@ const form = (props: FormikProps<FormValues>) => {
               error={touched.projeto && Boolean(errors.projeto)}
               margin="dense"
               variant="outlined"
+              disabled={true}
               fullWidth
             />
             <FormControl
@@ -80,19 +75,19 @@ const form = (props: FormikProps<FormValues>) => {
               className={styles.formControl}
               fullWidth
             >
-              <InputLabel id="select-system-label">Sistema Relacionado</InputLabel>
+              <InputLabel id="select-system-label">Tarefa Relacionada</InputLabel>
               <Select
-                id="sistema"
+                id="tarefa"
                 labelId="select-system-label"
-                value={values.sistema}
-                label="Sistema Relacionado"
-                onChange={(event) => setFieldValue('sistema', event.target.value)}
+                value={values.tarefa}
+                label="Tarefa Relacionada"
+                onChange={(event) => setFieldValue('tarefa', event.target.value)}
                 onBlur={handleBlur}
-                error={touched.sistema && Boolean(errors.sistema)}
+                error={touched.tarefa && Boolean(errors.tarefa)}
               >
-                {values?.options?.map((system) => (
-                  <MenuItem key={system.value} value={system.value}>
-                    {system.name}
+                {values?.options?.map((tarefa) => (
+                  <MenuItem key={tarefa.value} value={tarefa.value}>
+                    {tarefa.name}
                   </MenuItem>
                 ))}
               </Select>
@@ -112,29 +107,34 @@ const form = (props: FormikProps<FormValues>) => {
   );
 };
 
+interface Option {
+  name: string;
+  value:string;
+}
+
 interface MyFormProps {
   projeto: string;
-  sistema: string;
-  nome: string;
+  tarefa: string;
   options: Array<Option>;
-  handleNewSystem: (data: Object) => null;
+  descricao: string;
+  handleNewVR: (data: Object) => null;
 }
 
 const Form = withFormik<MyFormProps, FormValues>({
-  mapPropsToValues: ({ projeto, sistema, nome, options, handleNewSystem }) => {
+  mapPropsToValues: ({ projeto, tarefa, options, descricao, handleNewVR }) => {
     return {
       projeto: projeto,
-      sistema: sistema || '',
-      nome: nome || '',
+      descricao: descricao || '',
+      tarefa: tarefa || '',
       options: options || [],
-      handleNewSystem: handleNewSystem,
+      handleNewVR: handleNewVR,
     };
   },
 
   validationSchema: yup.object().shape(validationsForm),
 
   handleSubmit: (values, { props, setSubmitting, resetForm }) => {
-    const { handleNewSystem } = props;
+    const { handleNewVR } = props;
 
     setTimeout(() => {
       // submit to the server
@@ -144,12 +144,12 @@ const Form = withFormik<MyFormProps, FormValues>({
         body: JSON.stringify(values),
       };
 
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/sistemas/`, requestOptions)
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/vertices/`, requestOptions)
         .then((response) => response.json())
         .then((data) => {
           setSubmitting(false);
           resetForm();
-          handleNewSystem(data);
+          handleNewVR(data);
         });
     }, 1000);
   },
