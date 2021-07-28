@@ -16,17 +16,17 @@ import * as yup from 'yup';
 import styles from "./styles.module.scss";
 
 const validationsForm = {
-  projeto: yup.number().required('O projeto é obrigatório'),
+  indicador: yup.string().required('O Rótulo é obrigatório'),
   descricao: yup.string().required('A descrição é obrigatória'),
+  criterio_accountability: yup.string().required('O Criterio accountability é obrigatório'),
 };
 
 // Shape of form values
 interface FormValues {
-  projeto: string;
-  tarefa: string;
-  options: Array<Option>;
+  indicador: string;
   descricao: string;
-  handleNewVR: (data: Object) => null;
+  criterio_accountability: string;
+  handleNewCriteria: (data: Object) => null;
 }
 
 const form = (props: FormikProps<FormValues>) => {
@@ -42,14 +42,41 @@ const form = (props: FormikProps<FormValues>) => {
     handleReset,
   } = props;
 
+  const options = [
+    {
+      name: 'Engajamento', 
+      value: 'Engajamento'
+    },
+    {
+      name: 'Gerenciamento', 
+      value: 'Gerenciamento'
+    },
+    {
+      name: 'Regulação', 
+      value: 'Regulação'
+    }
+  ];
+
   return (
     <div className={styles.container}>
       <form onSubmit={handleSubmit}>
         <Card className={styles.card}>
           <CardContent>
             <TextField
+              id="indicador"
+              label="Rótulo do Indicador de Accountability"
+              value={values.indicador}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              helperText={touched.indicador ? errors.indicador : ''}
+              error={touched.indicador && Boolean(errors.indicador)}
+              margin="dense"
+              variant="outlined"
+              fullWidth
+            />
+            <TextField
               id="descricao"
-              label="Descrição do Vértice de Responsabilidade"
+              label="Descrição do Indicador de Accountability"
               value={values.descricao}
               onChange={handleChange}
               onBlur={handleBlur}
@@ -59,35 +86,24 @@ const form = (props: FormikProps<FormValues>) => {
               variant="outlined"
               fullWidth
             />
-            <TextField
-              id="projeto"
-              label="Projeto"
-              type="text"
-              value={values.projeto}
-              error={touched.projeto && Boolean(errors.projeto)}
-              margin="dense"
-              variant="outlined"
-              disabled={true}
-              fullWidth
-            />
             <FormControl
               variant="outlined"
               className={styles.formControl}
               fullWidth
             >
-              <InputLabel id="select-system-label">Tarefa Relacionada</InputLabel>
+              <InputLabel id="select-system-label">Criterio accountability</InputLabel>
               <Select
-                id="tarefa"
+                id="criterio_accountability"
                 labelId="select-system-label"
-                value={values.tarefa}
-                label="Tarefa Relacionada"
-                onChange={(event) => setFieldValue('tarefa', event.target.value)}
+                value={values.criterio_accountability}
+                label="Criterio accountability"
+                onChange={(event) => setFieldValue('criterio_accountability', event.target.value)}
                 onBlur={handleBlur}
-                error={touched.tarefa && Boolean(errors.tarefa)}
+                error={touched.criterio_accountability && Boolean(errors.criterio_accountability)}
               >
-                {values?.options?.map((tarefa) => (
-                  <MenuItem key={tarefa.value} value={tarefa.value}>
-                    {tarefa.name}
+                {options.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.name}
                   </MenuItem>
                 ))}
               </Select>
@@ -107,34 +123,27 @@ const form = (props: FormikProps<FormValues>) => {
   );
 };
 
-interface Option {
-  name: string;
-  value:string;
-}
-
 interface MyFormProps {
-  projeto: string;
-  tarefa: string;
-  options: Array<Option>;
+  indicador: string;
   descricao: string;
-  handleNewVR: (data: Object) => null;
+  criterio_accountability: string;
+  handleNewCriteria: (data: Object) => null;
 }
 
 const Form = withFormik<MyFormProps, FormValues>({
-  mapPropsToValues: ({ projeto, tarefa, options, descricao, handleNewVR }) => {
+  mapPropsToValues: ({ indicador, descricao, criterio_accountability, handleNewCriteria }) => {
     return {
-      projeto: projeto,
+      indicador: indicador,
       descricao: descricao || '',
-      tarefa: tarefa || '',
-      options: options || [],
-      handleNewVR: handleNewVR,
+      criterio_accountability: criterio_accountability || '',
+      handleNewCriteria: handleNewCriteria,
     };
   },
 
   validationSchema: yup.object().shape(validationsForm),
 
   handleSubmit: (values, { props, setSubmitting, resetForm }) => {
-    const { handleNewVR } = props;
+    const { handleNewCriteria } = props;
 
     setTimeout(() => {
       // submit to the server
@@ -144,12 +153,12 @@ const Form = withFormik<MyFormProps, FormValues>({
         body: JSON.stringify(values),
       };
 
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/vertices/`, requestOptions)
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/criterios-ux/`, requestOptions)
         .then((response) => response.json())
         .then((data) => {
           setSubmitting(false);
           resetForm();
-          handleNewVR(data);
+          handleNewCriteria(data);
         });
     }, 1000);
   },

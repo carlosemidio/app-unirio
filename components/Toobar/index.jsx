@@ -25,7 +25,7 @@ const Toobar = ({onSave, onRestore}) => {
                     </div>
                     <button className={styles.rBTN} onDragStart={(event) => onDragStart(event, 'VRNode')} draggable>R</button>
                     <span className={styles.aBTN} onDragStart={(event) => onDragStart(event, 'TextNode')} draggable>A</span>
-                    <button className={styles.criteriaBTN}>Acountability Criteria</button>
+                    <button className={styles.criteriaBTN} onDragStart={(event) => onDragStart(event, 'ACRNode')} draggable>Acountability Criteria</button>
                 </div>
             </Container>
         </div>

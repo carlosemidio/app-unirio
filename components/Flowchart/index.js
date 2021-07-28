@@ -13,8 +13,6 @@ import ReactFlow, {
 import CustomEdge from './CustomEdge';
 import SiNode from './Nodes/SiNode';
 import ActorNode from './Nodes/ActorNode';
-import ACGNode from './Nodes/ACGNode';
-import ACENode from './Nodes/ACENode';
 import ACRNode from './Nodes/ACRNode';
 import TextNode from './Nodes/TextNode';
 import VRNode from './Nodes/VRNode';
@@ -22,6 +20,7 @@ import SIForm from '../SIForm';
 import ActorForm from '../ActorForm';
 import VRForm from '../VRForm';
 import TextForm from '../TextForm';
+import ACRForm from '../ACRForm';
 import Toobar from '../Toobar';
 
 import localforage from 'localforage';
@@ -36,8 +35,6 @@ localforage.config({
 const nodeTypes = {
     SiNode: SiNode,
     ActorNode: ActorNode,
-    ACGNode: ACGNode,
-    ACENode: ACENode,
     ACRNode: ACRNode,
     VRNode: VRNode,
     TextNode: TextNode,
@@ -101,9 +98,19 @@ const SaveRestore = ({project}) => {
         handleCloseModal();
     }
 
-    const handleNewText = (vr) => {
+    const handleNewText = (text) => {
         currentNode.data = { 
-            title: `${vr}`,
+            title: `${text}`,
+        };
+
+        setElements((es) => es.concat(currentNode));
+        handleCloseModal();
+    }
+
+    const handleNewCriteria = (criteria) => {
+        currentNode.data = { 
+            title: `${criteria.indicador}`,
+            item: criteria
         };
 
         setElements((es) => es.concat(currentNode));
@@ -186,6 +193,10 @@ const SaveRestore = ({project}) => {
             case 'TextNode':
                 return (
                     <TextForm handleNewText={handleNewText} />
+                );
+            case 'ACRNode':
+                return (
+                    <ACRForm handleNewCriteria={handleNewCriteria} />
                 );
             default:
                 return <></>;
