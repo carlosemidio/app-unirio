@@ -3,7 +3,7 @@ import { Container } from '@material-ui/core';
 
 import styles from "./styles.module.scss";
 import Image from 'next/image';
-import logoPic from '/logo.png';
+import logoPic from '../public/logo.png'
 
 const Header: React.FC = () => {
     return (
