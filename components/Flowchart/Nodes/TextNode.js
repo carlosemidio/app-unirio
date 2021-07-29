@@ -1,9 +1,8 @@
 import React, { memo } from 'react';
 
 import { Handle } from 'react-flow-renderer';
-import AccessibilityNewIcon from '@material-ui/icons/AccessibilityNew';
 
-const TextNode = memo(({ data }) => {
+const TextNode = (({ data }) => {
   return (
     <>
       <Handle
@@ -25,4 +24,4 @@ const TextNode = memo(({ data }) => {
   );
 });
 
-export default TextNode;
+export default memo(TextNode);
