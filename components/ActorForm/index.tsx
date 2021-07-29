@@ -17,7 +17,6 @@ import styles from "./styles.module.scss";
 
 const validationsForm = {
   projeto: yup.number().required('O projeto é obrigatório'),
-  ator: yup.number().required('O ator relacionado é obrigatório'),
   nome: yup.string().required('O nome é obrigatório'),
 };
 
@@ -29,9 +28,7 @@ interface Option {
 // Shape of form values
 interface FormValues {
   projeto: string;
-  ator: string;
   nome: string;
-  options: Array<Option>;
   handleNewActor: (data: Object) => null;
 }
 
@@ -76,28 +73,6 @@ const form = (props: FormikProps<FormValues>) => {
               disabled={true}
               fullWidth
             />
-            <FormControl
-              variant="outlined"
-              className={styles.formControl}
-              fullWidth
-            >
-              <InputLabel id="select-system-label">Ator Relacionado</InputLabel>
-              <Select
-                id="ator"
-                labelId="select-system-label"
-                value={values.ator}
-                label="Ator Relacionado"
-                onChange={(event) => setFieldValue('ator', event.target.value)}
-                onBlur={handleBlur}
-                error={touched.ator && Boolean(errors.ator)}
-              >
-                {values?.options?.map((system) => (
-                  <MenuItem key={system.value} value={system.value}>
-                    {system.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
           </CardContent>
           <CardActions className={styles.actions}>
             <Button type="submit" color="primary" disabled={isSubmitting}>
@@ -115,19 +90,15 @@ const form = (props: FormikProps<FormValues>) => {
 
 interface MyFormProps {
   projeto: string;
-  ator: string;
   nome: string;
-  options: Array<Option>;
   handleNewActor: (data: Object) => null;
 }
 
 const Form = withFormik<MyFormProps, FormValues>({
-  mapPropsToValues: ({ projeto, ator, nome, options, handleNewActor }) => {
+  mapPropsToValues: ({ projeto, ator, nome, handleNewActor }) => {
     return {
       projeto: projeto,
-      ator: ator || '',
       nome: nome || '',
-      options: options || [],
       handleNewActor: handleNewActor,
     };
   },

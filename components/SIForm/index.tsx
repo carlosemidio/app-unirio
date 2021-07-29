@@ -17,7 +17,6 @@ import styles from "./styles.module.scss";
 
 const validationsForm = {
   projeto: yup.number().required('O projeto é obrigatório'),
-  sistema: yup.number().required('O sistema é obrigatório'),
   nome: yup.string().required('O nome é obrigatório'),
 };
 
@@ -29,9 +28,7 @@ interface Option {
 // Shape of form values
 interface FormValues {
   projeto: string;
-  sistema: string;
   nome: string;
-  options: Array<Option>;
   handleNewSystem: (data: Object) => null;
 }
 
@@ -76,28 +73,6 @@ const form = (props: FormikProps<FormValues>) => {
               disabled={true}
               fullWidth
             />
-            <FormControl
-              variant="outlined"
-              className={styles.formControl}
-              fullWidth
-            >
-              <InputLabel id="select-system-label">Sistema Relacionado</InputLabel>
-              <Select
-                id="sistema"
-                labelId="select-system-label"
-                value={values.sistema}
-                label="Sistema Relacionado"
-                onChange={(event) => setFieldValue('sistema', event.target.value)}
-                onBlur={handleBlur}
-                error={touched.sistema && Boolean(errors.sistema)}
-              >
-                {values?.options?.map((system) => (
-                  <MenuItem key={system.value} value={system.value}>
-                    {system.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
           </CardContent>
           <CardActions className={styles.actions}>
             <Button type="submit" color="primary" disabled={isSubmitting}>
@@ -115,19 +90,15 @@ const form = (props: FormikProps<FormValues>) => {
 
 interface MyFormProps {
   projeto: string;
-  sistema: string;
   nome: string;
-  options: Array<Option>;
   handleNewSystem: (data: Object) => null;
 }
 
 const Form = withFormik<MyFormProps, FormValues>({
-  mapPropsToValues: ({ projeto, sistema, nome, options, handleNewSystem }) => {
+  mapPropsToValues: ({ projeto, nome, handleNewSystem }) => {
     return {
       projeto: projeto,
-      sistema: sistema || '',
       nome: nome || '',
-      options: options || [],
       handleNewSystem: handleNewSystem,
     };
   },

@@ -8,7 +8,7 @@ const backgroundColors = {
   'Regulação': '#5f91ec'
 };
 
-const ACRNode = memo(({ data }) => {
+const ACRNode = (({ data }) => {
   return (
     <>
       <Handle
@@ -29,4 +29,4 @@ const ACRNode = memo(({ data }) => {
   );
 });
 
-export default ACRNode;
+export default memo(ACRNode);
