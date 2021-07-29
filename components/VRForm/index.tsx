@@ -23,8 +23,6 @@ const validationsForm = {
 // Shape of form values
 interface FormValues {
   projeto: string;
-  tarefa: string;
-  options: Array<Option>;
   descricao: string;
   handleNewVR: (data: Object) => null;
 }
@@ -70,28 +68,6 @@ const form = (props: FormikProps<FormValues>) => {
               disabled={true}
               fullWidth
             />
-            <FormControl
-              variant="outlined"
-              className={styles.formControl}
-              fullWidth
-            >
-              <InputLabel id="select-system-label">Tarefa Relacionada</InputLabel>
-              <Select
-                id="tarefa"
-                labelId="select-system-label"
-                value={values.tarefa}
-                label="Tarefa Relacionada"
-                onChange={(event) => setFieldValue('tarefa', event.target.value)}
-                onBlur={handleBlur}
-                error={touched.tarefa && Boolean(errors.tarefa)}
-              >
-                {values?.options?.map((tarefa) => (
-                  <MenuItem key={tarefa.value} value={tarefa.value}>
-                    {tarefa.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
           </CardContent>
           <CardActions className={styles.actions}>
             <Button type="submit" color="primary" disabled={isSubmitting}>
@@ -114,19 +90,15 @@ interface Option {
 
 interface MyFormProps {
   projeto: string;
-  tarefa: string;
-  options: Array<Option>;
   descricao: string;
   handleNewVR: (data: Object) => null;
 }
 
 const Form = withFormik<MyFormProps, FormValues>({
-  mapPropsToValues: ({ projeto, tarefa, options, descricao, handleNewVR }) => {
+  mapPropsToValues: ({ projeto, descricao, handleNewVR }) => {
     return {
       projeto: projeto,
       descricao: descricao || '',
-      tarefa: tarefa || '',
-      options: options || [],
       handleNewVR: handleNewVR,
     };
   },
