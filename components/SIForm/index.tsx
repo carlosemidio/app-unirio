@@ -73,6 +73,7 @@ const form = (props: FormikProps<FormValues>) => {
               error={touched.projeto && Boolean(errors.projeto)}
               margin="dense"
               variant="outlined"
+              disabled={true}
               fullWidth
             />
             <FormControl

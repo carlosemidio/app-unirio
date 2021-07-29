@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 
 import { Handle } from 'react-flow-renderer';
 
-export default memo(({ data }) => {
+const SiNode = memo(({ data }) => {
   return (
     <>
       <Handle
@@ -20,3 +20,5 @@ export default memo(({ data }) => {
     </>
   );
 });
+
+export default SiNode;

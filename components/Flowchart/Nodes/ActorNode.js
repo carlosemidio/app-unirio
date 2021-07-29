@@ -3,7 +3,7 @@ import React, { memo } from 'react';
 import { Handle } from 'react-flow-renderer';
 import AccessibilityNewIcon from '@material-ui/icons/AccessibilityNew';
 
-export default memo(({ data }) => {
+const ActorNode = memo(({ data }) => {
   return (
     <>
       <Handle
@@ -25,3 +25,5 @@ export default memo(({ data }) => {
     </>
   );
 });
+
+export default ActorNode;
