@@ -95,7 +95,7 @@ interface MyFormProps {
 }
 
 const Form = withFormik<MyFormProps, FormValues>({
-  mapPropsToValues: ({ projeto, ator, nome, handleNewActor }) => {
+  mapPropsToValues: ({ projeto, nome, handleNewActor }) => {
     return {
       projeto: projeto,
       nome: nome || '',
