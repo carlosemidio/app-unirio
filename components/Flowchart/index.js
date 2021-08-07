@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
+
 import ReactFlow, {
   removeElements,
   addEdge,
@@ -22,10 +24,23 @@ import VRForm from '../VRForm';
 import TextForm from '../TextForm';
 import ACRForm from '../ACRForm';
 import Toobar from '../Toobar';
-
 import localforage from 'localforage';
+import SelectForm from '../SelectForm';
+import { FormControl, FormControlLabel, RadioGroup, Radio } from '@material-ui/core';
 
-import styles from "./styles.module.scss";
+const useStyles = makeStyles((theme) => ({
+    modal: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    paper: {
+      backgroundColor: theme.palette.background.paper,
+      border: '2px solid #000',
+      boxShadow: theme.shadows[5],
+      padding: theme.spacing(2, 4, 3),
+    },
+  }));
 
 localforage.config({
   name: 'react-flow-docs',
@@ -51,7 +66,13 @@ const getId = () => `node_${id++}`;
 let data = [];
 let currentNode = null;
 
-const SaveRestore = ({project}) => {
+const SaveRestore = ({ project, systems, actors, vertices }) => {
+    const classes = useStyles();
+
+    const [projectSystems, setProjectSystems ] = useState(systems);
+    const [projectActors, setProjectActors ] = useState(actors);
+    const [projectVertices, setProjectVertices ] = useState(vertices);
+
     const reactFlowWrapper = useRef(null);
     const [rfInstance, setRfInstance] = useState(null);
     const [elements, setElements] = useState([]);
@@ -59,6 +80,7 @@ const SaveRestore = ({project}) => {
     const onConnect = (params) => setElements((els) => addEdge(params, els));
 
     const [openModal, setOpenModal] = useState(false);
+    const [newItem, setNewItem] = useState(false);
 
     const handleOpenModal = () => {
         setOpenModal( true );
@@ -68,34 +90,79 @@ const SaveRestore = ({project}) => {
         setOpenModal( false );
     }
 
-    const handleNewSystem = (sistema) => {
-        currentNode.data = { 
-            title: `${sistema.nome}`,
-            item: sistema
-        };
-
-        setElements((es) => es.concat(currentNode));
-        handleCloseModal();
+    const handleSelectItem = (itemId, type) => {
+        switch(type) {
+            case 'SiNode': {
+                let system = projectSystems.filter(system => {
+                    if (system.pk == itemId) {
+                        return system;
+                    }
+                })[0];
+        
+                if (system) {
+                    currentNode.data = { 
+                        title: `${system.nome}`,
+                        item: system
+                    };
+            
+                    setElements((es) => es.concat(currentNode));
+                    handleCloseModal();
+                }
+            }
+            case 'ActorNode': {
+                let actor = projectActors.filter(actor => {
+                    if (actor.pk == itemId) {
+                        return actor;
+                    }
+                })[0];
+        
+                if (actor) {
+                    currentNode.data = { 
+                        title: `${actor.nome}`,
+                        item: actor
+                    };
+            
+                    setElements((es) => es.concat(currentNode));
+                    handleCloseModal();
+                }
+            }
+                
+            case 'VRNode': {
+                let vertice = projectVertices.filter(vertice => {
+                    if (vertice.pk == itemId) {
+                        return vertice;
+                    }
+                })[0];
+        
+                if (vertice) {
+                    currentNode.data = { 
+                        title: `${vertice.descricao}`,
+                        item: vertice
+                    };
+            
+                    setElements((es) => es.concat(currentNode));
+                    handleCloseModal();
+                }
+            }   
+            case 'TextNode':
+                
+            case 'ACRNode':
+                
+            default:
+                return <></>;
+        }
     }
 
-    const handleNewActor = (ator) => {
-        currentNode.data = { 
-            title: `${ator.nome}`,
-            item: ator
-        };
-
-        setElements((es) => es.concat(currentNode));
-        handleCloseModal();
+    const handleNewSystem = (system) => {
+        setProjectSystems([system].concat(...projectSystems));
     }
 
-    const handleNewVR = (vr) => {
-        currentNode.data = { 
-            title: `${vr.descricao}`,
-            item: vr
-        };
+    const handleNewActor = (actor) => {
+        setProjectActors([actor].concat(...projectActors));
+    }
 
-        setElements((es) => es.concat(currentNode));
-        handleCloseModal();
+    const handleNewVR = (vertice) => {
+        setProjectVertices([vertice].concat(...projectVertices));
     }
 
     const handleNewText = (text) => {
@@ -174,21 +241,24 @@ const SaveRestore = ({project}) => {
         switch(type) {
             case 'SiNode':
                 return (
-                    <SIForm projeto={project.pk} options={ project.sistemas.map(system => {
-                        return {name: system?.nome, value: system.id};
-                    }) } handleNewSystem={handleNewSystem} />
+                    newItem ? <SIForm projeto={project.pk} handleNewSystem={handleNewSystem} /> 
+                    : <SelectForm options={ projectSystems.map(system => {
+                        return {name: system?.nome, value: system.pk};
+                    }) } type={type} handleSelectItem={handleSelectItem} />
                 );
             case 'ActorNode':
                 return (
-                    <ActorForm projeto={project.pk} options={project.atores.map(system => {
-                        return {name: system?.nome, value: system.id};
-                    })} handleNewActor={handleNewActor} />
+                    newItem ? <ActorForm projeto={project.pk} handleNewActor={handleNewActor} />
+                    : <SelectForm options={ projectActors.map(actor => {
+                        return {name: actor?.nome, value: actor.pk};
+                    }) } type={type} handleSelectItem={handleSelectItem} />
                 );
             case 'VRNode':
                 return (
-                    <VRForm projeto={project.pk} options={project.tarefas.map(tarefa => {
-                        return {name: tarefa?.nome, value: tarefa.id};
-                    })} handleNewVR={handleNewVR} />
+                    newItem ? <VRForm projeto={project.pk} handleNewVR={handleNewVR} />
+                    : <SelectForm options={ projectVertices.map(vertices => {
+                        return {name: vertices?.descricao, value: vertices.pk};
+                    }) } type={type} handleSelectItem={handleSelectItem} />
                 );
             case 'TextNode':
                 return (
@@ -224,7 +294,7 @@ const SaveRestore = ({project}) => {
             <Modal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
-                className={styles.modal}
+                className={classes.modal}
                 open={openModal}
                 onClose={handleCloseModal}
                 closeAfterTransition
@@ -233,11 +303,18 @@ const SaveRestore = ({project}) => {
                 timeout: 500,
                 }}
             >
-                <>
-                    <Fade in={openModal}>
-                        { switchForm() }
-                    </Fade>
-                </>
+                <Fade in={openModal}>
+                <div className={classes.paper}>
+                    {currentNode?.type != 'TextNode' ? <FormControl component="fieldset">
+                            <RadioGroup aria-label="donationType" name="donationType1">
+                                <FormControlLabel value="0" onChange={ event => setNewItem(false) } checked={!newItem} control={<Radio />} label="Selecionar" />
+                                <FormControlLabel value="1" onChange={ event => setNewItem(true) } checked={newItem} control={<Radio />} label="Adicionar" />
+                            </RadioGroup>
+                        </FormControl> : <></>
+                    }
+                    { switchForm() }
+                </div>
+                </Fade>
             </Modal>
         </div>
     );

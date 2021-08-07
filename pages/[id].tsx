@@ -4,14 +4,17 @@ import Header from '../components/Header';
 import { ReactFlowProvider } from 'react-flow-renderer';
 import OverviewFlow from '../components/Flowchart';
 import { GetServerSideProps } from 'next';
+import { orderBy } from 'lodash';
 
 import styles from '../styles/Home.module.css'
 
 interface IProps {
   project?: Object;
+  systems?: Array<Object>;
+  actors?: Array<Object>;
 }
 
-const Home: React.FC<IProps> = ({project}) => {
+const Home: React.FC<IProps> = ({ project, systems, actors, vertices }) => {
   return (
     <div className={styles.container}>
       <Head>
@@ -24,7 +27,11 @@ const Home: React.FC<IProps> = ({project}) => {
 
       <main className={styles.main} style={{ width: '100%', height: '100%' }}>
         <ReactFlowProvider>
-          <OverviewFlow project={project} />
+          <OverviewFlow 
+            project={project} 
+            systems={orderBy(systems, ['pk'], ['desc'])}
+            actors={orderBy(actors, ['pk'], ['desc'])}
+            vertices={orderBy(vertices, ['pk'], ['desc'])} />
         </ReactFlowProvider>
       </main>
 
@@ -49,15 +56,36 @@ export default Home;
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const id = ctx?.params?.id;
 
-  const res = await fetch(
+  const resProject = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/projetos/${id}`
   );
 
-  const project = await res.json();
+  const project = await resProject.json();
 
+  const resSystems = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/sistemas/?projeto=${id}`
+  );
+
+  const systems = await resSystems.json();
+
+  const resActors = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/atores/?projeto=${id}`
+  );
+
+  const actors = await resActors.json();
+
+  const resVertices = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/vertices/?projeto=${id}`
+  );
+
+  const vertices = await resVertices.json();
+  
   return {
     props: {
-      project
+      project,
+      systems,
+      actors,
+      vertices
     }
   };
 }

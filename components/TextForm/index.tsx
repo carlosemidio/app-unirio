@@ -55,7 +55,7 @@ const form = (props: FormikProps<FormValues>) => {
           </CardContent>
           <CardActions className={styles.actions}>
             <Button type="submit" color="primary" disabled={isSubmitting}>
-              Enviar
+              Adicionar texto
             </Button>
             <Button color="secondary" onClick={handleReset}>
               Cancelar

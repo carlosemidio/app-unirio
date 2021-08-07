@@ -5,10 +5,6 @@ import {
   CardActions,
   TextField,
   Button,
-  InputLabel,
-  Select,
-  FormControl,
-  MenuItem,
 } from '@material-ui/core';
 import { withFormik, FormikProps } from 'formik';
 import * as yup from 'yup';
@@ -76,7 +72,7 @@ const form = (props: FormikProps<FormValues>) => {
           </CardContent>
           <CardActions className={styles.actions}>
             <Button type="submit" color="primary" disabled={isSubmitting}>
-              Enviar
+              Adicionar Sistema
             </Button>
             <Button color="secondary" onClick={handleReset}>
               Cancelar
