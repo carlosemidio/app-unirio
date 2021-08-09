@@ -13,7 +13,7 @@ const ACRNode = (({ data }) => {
     <>
       <Handle
         type="target"
-        position="left"
+        position="top"
         style={{ background: '#555' }}
         onConnect={(params) => console.log('handle onConnect', params)}
       />
@@ -22,7 +22,7 @@ const ACRNode = (({ data }) => {
       </div>
       <Handle
         type="source"
-        position="right"
+        position="bottom"
         id="a"
       />
     </>

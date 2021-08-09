@@ -7,14 +7,14 @@ const SiNode = (({ data }) => {
     <>
       <Handle
         type="target"
-        position="left"
+        position="top"
         style={{ background: '#555' }}
         onConnect={(params) => console.log('handle onConnect', params)}
       />
       <span style={{ borderRadius: '50%', color: '#ffffff', backgroundColor:  '#1f49c7', padding: 10}}>{data?.title}</span>
       <Handle
         type="source"
-        position="right"
+        position="bottom"
         id="a"
       />
     </>

@@ -23,8 +23,10 @@ const validationsForm = {
 
 // Shape of form values
 interface FormValues {
+  criteriaType: boolean;
   indicador: string;
   descricao: string;
+  nome_iso: string;
   criterio_accountability: string;
   handleNewCriteria: (data: Object) => null;
 }
@@ -86,6 +88,20 @@ const form = (props: FormikProps<FormValues>) => {
               variant="outlined"
               fullWidth
             />
+            {
+              !values.criteriaType ? <TextField
+                id="nome_iso"
+                label="Regra ISO"
+                value={values.nome_iso}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                helperText={touched.nome_iso ? errors.nome_iso : ''}
+                error={touched.nome_iso && Boolean(errors.nome_iso)}
+                margin="dense"
+                variant="outlined"
+                fullWidth
+              /> : <></> 
+            }
             <FormControl
               variant="outlined"
               className={styles.formControl}
@@ -124,17 +140,21 @@ const form = (props: FormikProps<FormValues>) => {
 };
 
 interface MyFormProps {
+  criteriaType: boolean;
   indicador: string;
   descricao: string;
+  nome_iso: string;
   criterio_accountability: string;
   handleNewCriteria: (data: Object) => null;
 }
 
 const Form = withFormik<MyFormProps, FormValues>({
-  mapPropsToValues: ({ indicador, descricao, criterio_accountability, handleNewCriteria }) => {
+  mapPropsToValues: ({ criteriaType, indicador, descricao, nome_iso, criterio_accountability, handleNewCriteria }) => {
     return {
+      criteriaType: criteriaType,
       indicador: indicador,
       descricao: descricao || '',
+      nome_iso: nome_iso || '',
       criterio_accountability: criterio_accountability || '',
       handleNewCriteria: handleNewCriteria,
     };
@@ -153,7 +173,7 @@ const Form = withFormik<MyFormProps, FormValues>({
         body: JSON.stringify(values),
       };
 
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/criterios-ux/`, requestOptions)
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/criterios-${values.criteriaType ? 'ux' : 'iso' }/`, requestOptions)
         .then((response) => response.json())
         .then((data) => {
           setSubmitting(false);

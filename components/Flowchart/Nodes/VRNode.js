@@ -8,7 +8,7 @@ const VRNode = (({ data }) => {
     <>
       <Handle
         type="target"
-        position="left"
+        position="top"
         style={{ background: '#555' }}
         onConnect={(params) => console.log('handle onConnect', params)}
       />
@@ -18,7 +18,7 @@ const VRNode = (({ data }) => {
       </span>
       <Handle
         type="source"
-        position="right"
+        position="bottom"
         id="a"
       />
     </>

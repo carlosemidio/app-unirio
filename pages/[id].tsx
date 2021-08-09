@@ -12,9 +12,12 @@ interface IProps {
   project?: Object;
   systems?: Array<Object>;
   actors?: Array<Object>;
+  vertices?: Array<Object>;
+  criteriaUX?: Array<Object>;
+  criteriaISO?: Array<Object>;
 }
 
-const Home: React.FC<IProps> = ({ project, systems, actors, vertices }) => {
+const Home: React.FC<IProps> = ({ project, systems, actors, vertices, criteriaUX, criteriaISO }) => {
   return (
     <div className={styles.container}>
       <Head>
@@ -31,7 +34,9 @@ const Home: React.FC<IProps> = ({ project, systems, actors, vertices }) => {
             project={project} 
             systems={orderBy(systems, ['pk'], ['desc'])}
             actors={orderBy(actors, ['pk'], ['desc'])}
-            vertices={orderBy(vertices, ['pk'], ['desc'])} />
+            vertices={orderBy(vertices, ['pk'], ['desc'])}
+            criteriaUX={orderBy(criteriaUX, ['pk'], ['desc'])}
+            criteriaISO={orderBy(criteriaISO, ['pk'], ['desc'])} />
         </ReactFlowProvider>
       </main>
 
@@ -79,13 +84,27 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   );
 
   const vertices = await resVertices.json();
+
+  const resCriteriaUX = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/criterios-ux`
+  );
+
+  const criteriaUX = await resCriteriaUX.json();
+
+  const resCriteriaISO = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/criterios-iso`
+  );
+
+  const criteriaISO = await resCriteriaISO.json();
   
   return {
     props: {
       project,
       systems,
       actors,
-      vertices
+      vertices,
+      criteriaUX,
+      criteriaISO
     }
   };
 }

@@ -39,6 +39,8 @@ const useStyles = makeStyles((theme) => ({
       border: '2px solid #000',
       boxShadow: theme.shadows[5],
       padding: theme.spacing(2, 4, 3),
+      display: 'flex',
+      flexDirection: 'column'
     },
   }));
 
@@ -66,12 +68,15 @@ const getId = () => `node_${id++}`;
 let data = [];
 let currentNode = null;
 
-const SaveRestore = ({ project, systems, actors, vertices }) => {
+const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaISO }) => {
     const classes = useStyles();
 
     const [projectSystems, setProjectSystems ] = useState(systems);
     const [projectActors, setProjectActors ] = useState(actors);
     const [projectVertices, setProjectVertices ] = useState(vertices);
+    const [criteriaux, setCriteriaux ] = useState(criteriaUX);
+    const [criteriaiso, setCriteriaiso ] = useState(criteriaISO);
+    const [criteriaList, setCriteriaList ] = useState([].concat(...criteriaUX));
 
     const reactFlowWrapper = useRef(null);
     const [rfInstance, setRfInstance] = useState(null);
@@ -81,6 +86,7 @@ const SaveRestore = ({ project, systems, actors, vertices }) => {
 
     const [openModal, setOpenModal] = useState(false);
     const [newItem, setNewItem] = useState(false);
+    const [criteriaType, setCriteriaType] = useState(true);
 
     const handleOpenModal = () => {
         setOpenModal( true );
@@ -144,9 +150,27 @@ const SaveRestore = ({ project, systems, actors, vertices }) => {
                     handleCloseModal();
                 }
             }   
-            case 'TextNode':
-                
-            case 'ACRNode':
+            case 'ACRNode': {
+                let criteria = (criteriaType) ? criteriaux.filter(criteria => {
+                    if (criteria.pk == itemId) {
+                        return criteria;
+                    }
+                })[0] : criteriaiso.filter(criteria => {
+                    if (criteria.pk == itemId) {
+                        return criteria;
+                    }
+                })[0];
+        
+                if (criteria) {
+                    currentNode.data = { 
+                        title: `${criteria.descricao}`,
+                        item: criteria
+                    };
+            
+                    setElements((es) => es.concat(currentNode));
+                    handleCloseModal();
+                }
+            }
                 
             default:
                 return <></>;
@@ -175,13 +199,11 @@ const SaveRestore = ({ project, systems, actors, vertices }) => {
     }
 
     const handleNewCriteria = (criteria) => {
-        currentNode.data = { 
-            title: `${criteria.indicador}`,
-            item: criteria
-        };
-
-        setElements((es) => es.concat(currentNode));
-        handleCloseModal();
+        if (criteriaType) {
+            setCriteriaux([criteria].concat(...criteriaux));
+        } else {
+            setCriteriaiso([criteria].concat(...criteriaiso));
+        }
     }
 
     const onDragOver = (event) => {
@@ -256,8 +278,8 @@ const SaveRestore = ({ project, systems, actors, vertices }) => {
             case 'VRNode':
                 return (
                     newItem ? <VRForm projeto={project.pk} handleNewVR={handleNewVR} />
-                    : <SelectForm options={ projectVertices.map(vertices => {
-                        return {name: vertices?.descricao, value: vertices.pk};
+                    : <SelectForm options={ projectVertices.map(vertice => {
+                        return {name: vertice?.descricao, value: vertice.pk};
                     }) } type={type} handleSelectItem={handleSelectItem} />
                 );
             case 'TextNode':
@@ -266,7 +288,18 @@ const SaveRestore = ({ project, systems, actors, vertices }) => {
                 );
             case 'ACRNode':
                 return (
-                    <ACRForm handleNewCriteria={handleNewCriteria} />
+                    newItem ? 
+                        (criteriaType 
+                            ? <ACRForm key='ux' criteriaType={criteriaType} handleNewCriteria={handleNewCriteria} />
+                            : <ACRForm key='iso' criteriaType={criteriaType} handleNewCriteria={handleNewCriteria} />)
+                    : (
+                        criteriaType ? <SelectForm key='selectUX' options={ criteriaux.map(criteria => {
+                            return {name: criteria?.descricao, value: criteria.pk};
+                        }) } type={type} handleSelectItem={handleSelectItem} />
+                        : <SelectForm key='selectISO' options={ criteriaiso.map(criteria => {
+                            return {name: criteria?.descricao, value: criteria.pk};
+                        }) } type={type} handleSelectItem={handleSelectItem} />
+                    )
                 );
             default:
                 return <></>;
@@ -306,9 +339,16 @@ const SaveRestore = ({ project, systems, actors, vertices }) => {
                 <Fade in={openModal}>
                 <div className={classes.paper}>
                     {currentNode?.type != 'TextNode' ? <FormControl component="fieldset">
-                            <RadioGroup aria-label="donationType" name="donationType1">
+                            <RadioGroup aria-label="donationType" name="donationType1" style={{ display: 'flex', flexDirection: 'row' }}>
                                 <FormControlLabel value="0" onChange={ event => setNewItem(false) } checked={!newItem} control={<Radio />} label="Selecionar" />
                                 <FormControlLabel value="1" onChange={ event => setNewItem(true) } checked={newItem} control={<Radio />} label="Adicionar" />
+                            </RadioGroup>
+                        </FormControl> : <></>
+                    }
+                    {currentNode?.type == 'ACRNode' ? <FormControl component="fieldset">
+                            <RadioGroup aria-label="donationType" name="donationType1" style={{ display: 'flex', flexDirection: 'row' }}>
+                                <FormControlLabel value="ux" onChange={ event => setCriteriaType(true) } checked={criteriaType} control={<Radio />} label="UX" />
+                                <FormControlLabel value="iso" onChange={ event => setCriteriaType(false) } checked={!criteriaType} control={<Radio />} label="ISO" />
                             </RadioGroup>
                         </FormControl> : <></>
                     }
