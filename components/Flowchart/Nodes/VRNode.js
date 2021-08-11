@@ -19,7 +19,6 @@ const VRNode = (({ data }) => {
       <Handle
         type="source"
         position="bottom"
-        id="a"
       />
     </>
   );

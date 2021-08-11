@@ -12,7 +12,7 @@ import ReactFlow, {
   Controls,
   Background,
 } from 'react-flow-renderer';
-import CustomEdge from './CustomEdge';
+import { FormControl, FormControlLabel, RadioGroup, Radio } from '@material-ui/core';
 import SiNode from './Nodes/SiNode';
 import ActorNode from './Nodes/ActorNode';
 import ACRNode from './Nodes/ACRNode';
@@ -26,7 +26,9 @@ import ACRForm from '../ACRForm';
 import Toobar from '../Toobar';
 import localforage from 'localforage';
 import SelectForm from '../SelectForm';
-import { FormControl, FormControlLabel, RadioGroup, Radio } from '@material-ui/core';
+import SiEdge from './Edges/SiEdge';
+import AcrEdge from './Edges/ACREdge';
+import SignedEdge from './Edges/SignedEdge';
 
 const useStyles = makeStyles((theme) => ({
     modal: {
@@ -58,7 +60,9 @@ const nodeTypes = {
 };
 
 const edgeTypes = {
-    custom: CustomEdge,
+    SiEdge: SiEdge,
+    AcrEdge: AcrEdge,
+    SignedEdge: SignedEdge
 };
 
 const flowKey = 'app-unirio';
@@ -76,17 +80,54 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
     const [projectVertices, setProjectVertices ] = useState(vertices);
     const [criteriaux, setCriteriaux ] = useState(criteriaUX);
     const [criteriaiso, setCriteriaiso ] = useState(criteriaISO);
-    const [criteriaList, setCriteriaList ] = useState([].concat(...criteriaUX));
 
     const reactFlowWrapper = useRef(null);
     const [rfInstance, setRfInstance] = useState(null);
     const [elements, setElements] = useState([]);
     const onElementsRemove = (elementsToRemove) => setElements((els) => removeElements(elementsToRemove, els));
-    const onConnect = (params) => setElements((els) => addEdge(params, els));
+    const onConnect = (params) => setElements((els) => handleConnect(params, els));
 
     const [openModal, setOpenModal] = useState(false);
     const [newItem, setNewItem] = useState(false);
     const [criteriaType, setCriteriaType] = useState(true);
+
+    function handleConnect(params, els) {
+        let source = els.filter(element => {
+            if (element.id == params.source) {
+                return element;
+            }
+        })[0];
+
+        let target = els.filter(element => {
+            if (element.id == params.target) {
+                return element;
+            }
+        })[0];
+
+        switch (source.type) {
+            case 'ACRNode': {
+                params['type'] = 'AcrEdge';
+                break;
+            }
+            case 'SiNode': {
+                if (source.type == target.type) {
+                    params['type'] = 'SiEdge';
+                } else {
+                    alert('Escolha o sinal');
+                    params['type'] = 'SignedEdge';
+                }
+                break;
+            }
+            default:
+            {
+                alert('Escolha o sinal');
+                params['type'] = 'SignedEdge';
+                break;
+            };
+        }
+
+        setElements((els) => addEdge(params, els));
+    }
 
     const handleOpenModal = () => {
         setOpenModal( true );
@@ -114,6 +155,8 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
                     setElements((es) => es.concat(currentNode));
                     handleCloseModal();
                 }
+
+                break;
             }
             case 'ActorNode': {
                 let actor = projectActors.filter(actor => {
@@ -131,8 +174,9 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
                     setElements((es) => es.concat(currentNode));
                     handleCloseModal();
                 }
-            }
-                
+
+                break;
+            }   
             case 'VRNode': {
                 let vertice = projectVertices.filter(vertice => {
                     if (vertice.pk == itemId) {
@@ -149,6 +193,8 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
                     setElements((es) => es.concat(currentNode));
                     handleCloseModal();
                 }
+
+                break;
             }   
             case 'ACRNode': {
                 let criteria = (criteriaType) ? criteriaux.filter(criteria => {
@@ -170,6 +216,8 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
                     setElements((es) => es.concat(currentNode));
                     handleCloseModal();
                 }
+
+                break;
             }
                 
             default:
@@ -263,21 +311,21 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
         switch(type) {
             case 'SiNode':
                 return (
-                    newItem ? <SIForm projeto={project.pk} handleNewSystem={handleNewSystem} /> 
+                    newItem ? <SIForm key='systemForm' projeto={project.pk} handleNewSystem={handleNewSystem} /> 
                     : <SelectForm options={ projectSystems.map(system => {
                         return {name: system?.nome, value: system.pk};
                     }) } type={type} handleSelectItem={handleSelectItem} />
                 );
             case 'ActorNode':
                 return (
-                    newItem ? <ActorForm projeto={project.pk} handleNewActor={handleNewActor} />
+                    newItem ? <ActorForm key='actorForm' projeto={project.pk} handleNewActor={handleNewActor} />
                     : <SelectForm options={ projectActors.map(actor => {
                         return {name: actor?.nome, value: actor.pk};
                     }) } type={type} handleSelectItem={handleSelectItem} />
                 );
             case 'VRNode':
                 return (
-                    newItem ? <VRForm projeto={project.pk} handleNewVR={handleNewVR} />
+                    newItem ? <VRForm key='vrForm' projeto={project.pk} handleNewVR={handleNewVR} />
                     : <SelectForm options={ projectVertices.map(vertice => {
                         return {name: vertice?.descricao, value: vertice.pk};
                     }) } type={type} handleSelectItem={handleSelectItem} />
@@ -312,6 +360,7 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
                 elements={elements}
                 onElementsRemove={onElementsRemove}
                 onConnect={onConnect}
+                connectionLineComponent={SignedEdge}
                 onLoad={setRfInstance}
                 edgeTypes={edgeTypes}
                 nodeTypes={nodeTypes}

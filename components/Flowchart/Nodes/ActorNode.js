@@ -8,7 +8,7 @@ const ActorNode = (({ data }) => {
     <>
       <Handle
         type="target"
-        position="left"
+        position="top"
         style={{ background: '#555' }}
         onConnect={(params) => console.log('handle onConnect', params)}
       />
@@ -19,8 +19,7 @@ const ActorNode = (({ data }) => {
       </span>
       <Handle
         type="source"
-        position="right"
-        id="a"
+        position="bottom"
       />
     </>
   );

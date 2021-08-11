@@ -25,10 +25,8 @@ interface Option {
 
 // Shape of form values
 interface FormValues {
-  options: Array<Option>;
   item: string;
-  type: string;
-  handleSelectItem: (id: string, type: string) => null;
+  handleSelectItem: (signal: string) => null;
 }
 
 const form = (props: FormikProps<FormValues>) => {
@@ -43,6 +41,21 @@ const form = (props: FormikProps<FormValues>) => {
     handleSubmit,
     handleReset,
   } = props;
+
+  const options = [
+    {
+      name: 'Positivo', 
+      value: '+'
+    },
+    {
+      name: 'Negativo', 
+      value: '-'
+    },
+    {
+      name: 'Default', 
+      value: ''
+    }
+  ];
 
   return (
     <div className={styles.container}>
@@ -64,7 +77,7 @@ const form = (props: FormikProps<FormValues>) => {
                 onBlur={handleBlur}
                 error={touched.item && Boolean(errors.item)}
               >
-                {values?.options?.map((item) => (
+                {options?.map((item) => (
                   <MenuItem key={item.value} value={item.value}>
                     {item.name}
                   </MenuItem>
@@ -87,18 +100,14 @@ const form = (props: FormikProps<FormValues>) => {
 };
 
 interface MyFormProps {
-  options: Array<Option>;
   item: string;
-  type: string;
-  handleSelectItem: (id: string, type: string) => null;
+  handleSelectItem: (signal: string) => null;
 }
 
 const Form = withFormik<MyFormProps, FormValues>({
-  mapPropsToValues: ({ options, item, type, handleSelectItem }) => {
+  mapPropsToValues: ({ item, handleSelectItem }) => {
     return {
-      options: options || [],
       item: item || '',
-      type: type || '',
       handleSelectItem: handleSelectItem,
     };
   },
@@ -111,7 +120,7 @@ const Form = withFormik<MyFormProps, FormValues>({
     setTimeout(() => {
       setSubmitting(false);
       resetForm();
-      handleSelectItem(values.item, values.type);
+      handleSelectItem(values.item);
     }, 400);
   },
 })(form);

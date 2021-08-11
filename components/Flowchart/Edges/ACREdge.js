@@ -9,7 +9,10 @@ export default function CustomEdge({
   targetY,
   sourcePosition,
   targetPosition,
-  style = {},
+  style = {
+    stroke: 'blue',
+    strokeWidth: 3
+  },
   data,
   arrowHeadType,
   markerEndId,
@@ -21,9 +24,7 @@ export default function CustomEdge({
     <>
       <path id={id} style={style} className="react-flow__edge-path" d={edgePath} markerEnd={markerEnd} />
       <text>
-        <textPath href={`#${id}`} style={{ fontSize: '12px' }} startOffset="50%" textAnchor="middle">
-          {data.text}
-        </textPath>
+        {/* <textPath href={`#${id}`} style={{ fontSize: '12px' }} startOffset="50%" textAnchor="middle">SiEdge</textPath> */}
       </text>
     </>
   );
