@@ -26,6 +26,7 @@ import ACRForm from '../ACRForm';
 import Toobar from '../Toobar';
 import localforage from 'localforage';
 import SelectForm from '../SelectForm';
+import SelectSignal from '../SelectSignal';
 import SiEdge from './Edges/SiEdge';
 import AcrEdge from './Edges/ACREdge';
 import SignedEdge from './Edges/SignedEdge';
@@ -71,6 +72,7 @@ let id = 0;
 const getId = () => `node_${id++}`;
 let data = [];
 let currentNode = null;
+let currentLine = [];
 
 const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaISO }) => {
     const classes = useStyles();
@@ -90,8 +92,9 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
     const [openModal, setOpenModal] = useState(false);
     const [newItem, setNewItem] = useState(false);
     const [criteriaType, setCriteriaType] = useState(true);
+    const [addLine, setAddLine] = useState(false);
 
-    function handleConnect(params, els) {
+    const handleConnect = (params, els) => {
         let source = els.filter(element => {
             if (element.id == params.source) {
                 return element;
@@ -113,20 +116,38 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
                 if (source.type == target.type) {
                     params['type'] = 'SiEdge';
                 } else {
-                    alert('Escolha o sinal');
                     params['type'] = 'SignedEdge';
+                    setAddLine(true);
+                    handleOpenModal();
+                    currentLine['params'] = params;
+                    currentLine['els'] = els;
+                    return;
                 }
                 break;
             }
             default:
             {
-                alert('Escolha o sinal');
                 params['type'] = 'SignedEdge';
-                break;
+                setAddLine(true);
+                handleOpenModal();
+                currentLine['params'] = params;
+                currentLine['els'] = els;
+                return;
             };
         }
 
-        setElements((els) => addEdge(params, els));
+        setElements(() => addEdge(params, els));
+    }
+
+    const handleSignedLine = (sign) => {
+        let params = currentLine['params'];
+        let els = currentLine['els'];
+        params['data'] = { 'signal': sign };
+
+        setElements(() => addEdge(params, els));
+
+        setAddLine(false);
+        handleCloseModal();
     }
 
     const handleOpenModal = () => {
@@ -386,23 +407,24 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
                 }}
             >
                 <Fade in={openModal}>
-                <div className={classes.paper}>
-                    {currentNode?.type != 'TextNode' ? <FormControl component="fieldset">
-                            <RadioGroup aria-label="donationType" name="donationType1" style={{ display: 'flex', flexDirection: 'row' }}>
-                                <FormControlLabel value="0" onChange={ event => setNewItem(false) } checked={!newItem} control={<Radio />} label="Selecionar" />
-                                <FormControlLabel value="1" onChange={ event => setNewItem(true) } checked={newItem} control={<Radio />} label="Adicionar" />
-                            </RadioGroup>
-                        </FormControl> : <></>
-                    }
-                    {currentNode?.type == 'ACRNode' ? <FormControl component="fieldset">
-                            <RadioGroup aria-label="donationType" name="donationType1" style={{ display: 'flex', flexDirection: 'row' }}>
-                                <FormControlLabel value="ux" onChange={ event => setCriteriaType(true) } checked={criteriaType} control={<Radio />} label="UX" />
-                                <FormControlLabel value="iso" onChange={ event => setCriteriaType(false) } checked={!criteriaType} control={<Radio />} label="ISO" />
-                            </RadioGroup>
-                        </FormControl> : <></>
-                    }
-                    { switchForm() }
-                </div>
+                    <div className={classes.paper}>
+                        {((currentNode?.type != 'TextNode') && !addLine) ? <FormControl component="fieldset">
+                                <RadioGroup aria-label="donationType" name="donationType1" style={{ display: 'flex', flexDirection: 'row' }}>
+                                    <FormControlLabel value="0" onChange={ event => setNewItem(false) } checked={!newItem} control={<Radio />} label="Selecionar" />
+                                    <FormControlLabel value="1" onChange={ event => setNewItem(true) } checked={newItem} control={<Radio />} label="Adicionar" />
+                                </RadioGroup>
+                            </FormControl> : <></>
+                        }
+                        {((currentNode?.type == 'ACRNode') && !addLine) ? <FormControl component="fieldset">
+                                <RadioGroup aria-label="donationType" name="donationType1" style={{ display: 'flex', flexDirection: 'row' }}>
+                                    <FormControlLabel value="ux" onChange={ event => setCriteriaType(true) } checked={criteriaType} control={<Radio />} label="UX" />
+                                    <FormControlLabel value="iso" onChange={ event => setCriteriaType(false) } checked={!criteriaType} control={<Radio />} label="ISO" />
+                                </RadioGroup>
+                            </FormControl> : <></>
+                        }
+                        { !addLine ? switchForm() : <></> }
+                        {addLine ? <SelectSignal handleSelectItem={handleSignedLine} /> : <></>}
+                    </div>
                 </Fade>
             </Modal>
         </div>

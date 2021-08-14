@@ -53,7 +53,7 @@ const form = (props: FormikProps<FormValues>) => {
     },
     {
       name: 'Default', 
-      value: ''
+      value: '0'
     }
   ];
 
