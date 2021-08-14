@@ -121,6 +121,7 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
                     handleOpenModal();
                     currentLine['params'] = params;
                     currentLine['els'] = els;
+                    setElements(() => els);
                     return;
                 }
                 break;
@@ -132,6 +133,7 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
                 handleOpenModal();
                 currentLine['params'] = params;
                 currentLine['els'] = els;
+                setElements(() => els);
                 return;
             };
         }
