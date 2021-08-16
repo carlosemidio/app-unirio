@@ -30,6 +30,7 @@ import SelectSignal from '../SelectSignal';
 import SiEdge from './Edges/SiEdge';
 import AcrEdge from './Edges/ACREdge';
 import SignedEdge from './Edges/SignedEdge';
+import ImpactsForm from '../ImpactsForm';
 
 const useStyles = makeStyles((theme) => ({
     modal: {
@@ -93,6 +94,49 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
     const [newItem, setNewItem] = useState(false);
     const [criteriaType, setCriteriaType] = useState(true);
     const [addLine, setAddLine] = useState(false);
+
+    const [impactsChange, setImpactsChange] = useState(false);
+    const handleOpenImpactsChange = () => {
+        setImpactsChange(true);
+        handleOpenModal();
+    }
+
+    const [impatcSelected, setImpatcSelected] = useState(0);
+    const [impacts, setImpacts] = useState([
+        {
+            height: 200, 
+            width: '70%', 
+            color: '#000000', 
+            backgroundColor: '#bfbfbf', 
+            description: 'Estrutural'
+        },
+        {
+            height: 200, 
+            width: '70%', 
+            color: '#000000', 
+            backgroundColor: '#d9d9d9', 
+            description: 'Gradual'
+        },
+        {
+            height: 200,
+            width: '70%',
+            color: '#000000',
+            backgroundColor: '#f2f2f2',
+            description: 'Imediato'
+        }
+    ]);
+
+    const handleCloseImpactChanges = () => {
+        handleCloseModal();
+        setImpactsChange(false);
+    }
+
+    const handleImpactsChange = (field, value) => {
+        let impactList = [...impacts];
+        impactList[impatcSelected][field] = value;
+
+        setImpacts(impactList);
+    }
 
     const handleConnect = (params, els) => {
         let source = els.filter(element => {
@@ -378,7 +422,40 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
     }
 
     return (
-        <div style={{ width: '100%', height: '100%' }} ref={reactFlowWrapper}>
+        <div style={{ width: '100%', height: (impacts[0].height+impacts[1].height+impacts[2].height), background: 'transparent' }} ref={reactFlowWrapper}>
+            <div style={{
+                width: '100%', 
+                height: '100%',
+                position: 'absolute',
+                left: 0,
+                top: 140,
+                zIndex: -1
+            }}>
+                <div style={{
+                    position: 'relative',
+                    width: impacts[0].width,
+                    height: impacts[0].height,
+                    backgroundColor: impacts[0].backgroundColor,
+                    color: impacts[0].color,
+                    padding: 15,
+                }}>{impacts[0].description}</div>
+                <div style={{
+                    position: 'relative',
+                    width: impacts[1].width,
+                    height: impacts[1].height,
+                    backgroundColor: impacts[1].backgroundColor,
+                    color: impacts[1].color,
+                    padding: 15,
+                }}>{impacts[1].description}</div>
+                <div style={{
+                    position: 'relative',
+                    width: impacts[2].width,
+                    height: impacts[2].height,
+                    backgroundColor: impacts[2].backgroundColor,
+                    color: impacts[2].color,
+                    padding: 15,
+                }}>{impacts[2].description}</div>
+            </div>
             <ReactFlow
                 elements={elements}
                 onElementsRemove={onElementsRemove}
@@ -393,9 +470,9 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
                 onDragOver={onDragOver}
             >
                 <Controls />
-                <Background color="#aaa" gap={16} />
+                {/* <Background gap={16} /> */}
             </ReactFlow>
-            <Toobar onSave={onSave} onRestore={onRestore} />
+            <Toobar onSave={onSave} onRestore={onRestore} handleOpenImpactsChange={handleOpenImpactsChange} />
             <Modal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
@@ -410,22 +487,35 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
             >
                 <Fade in={openModal}>
                     <div className={classes.paper}>
-                        {((currentNode?.type != 'TextNode') && !addLine) ? <FormControl component="fieldset">
+                        {((currentNode?.type != 'TextNode') && !addLine && !impactsChange) ? <FormControl component="fieldset">
                                 <RadioGroup aria-label="donationType" name="donationType1" style={{ display: 'flex', flexDirection: 'row' }}>
                                     <FormControlLabel value="0" onChange={ event => setNewItem(false) } checked={!newItem} control={<Radio />} label="Selecionar" />
                                     <FormControlLabel value="1" onChange={ event => setNewItem(true) } checked={newItem} control={<Radio />} label="Adicionar" />
                                 </RadioGroup>
                             </FormControl> : <></>
                         }
-                        {((currentNode?.type == 'ACRNode') && !addLine) ? <FormControl component="fieldset">
+                        {((currentNode?.type == 'ACRNode') && !addLine && !impactsChange) ? <FormControl component="fieldset">
                                 <RadioGroup aria-label="donationType" name="donationType1" style={{ display: 'flex', flexDirection: 'row' }}>
                                     <FormControlLabel value="ux" onChange={ event => setCriteriaType(true) } checked={criteriaType} control={<Radio />} label="UX" />
                                     <FormControlLabel value="iso" onChange={ event => setCriteriaType(false) } checked={!criteriaType} control={<Radio />} label="ISO" />
                                 </RadioGroup>
                             </FormControl> : <></>
                         }
-                        { !addLine ? switchForm() : <></> }
-                        {addLine ? <SelectSignal handleSelectItem={handleSignedLine} /> : <></>}
+                        { (!addLine && !impactsChange) ? switchForm() : <></> }
+                        {(addLine && !impactsChange) ? <SelectSignal handleSelectItem={handleSignedLine} /> : <></>}
+                        { impactsChange ? <div>
+                            <FormControl component="fieldset">
+                                <RadioGroup aria-label="impacts" name="impacts" style={{ display: 'flex', flexDirection: 'row' }}>
+                                    <FormControlLabel value="0" onChange={ event => setImpatcSelected(0) } checked={(impatcSelected == 0)} control={<Radio />} label="Impact 1" />
+                                    <FormControlLabel value="1" onChange={ event => setImpatcSelected(1) } checked={(impatcSelected == 1)} control={<Radio />} label="Impact 2" />
+                                    <FormControlLabel value="2" onChange={ event => setImpatcSelected(2) } checked={(impatcSelected == 2)} control={<Radio />} label="Impact 3" />
+                                </RadioGroup>
+                            </FormControl>
+                            <ImpactsForm 
+                                impact={impacts[impatcSelected]} 
+                                handleImpactsChange={handleImpactsChange} 
+                                handleCloseImpactChanges={handleCloseImpactChanges} />
+                        </div> : <></> }
                     </div>
                 </Fade>
             </Modal>
