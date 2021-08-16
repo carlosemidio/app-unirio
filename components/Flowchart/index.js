@@ -104,21 +104,21 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
     const [impatcSelected, setImpatcSelected] = useState(0);
     const [impacts, setImpacts] = useState([
         {
-            height: 200, 
+            height: '200px', 
             width: '70%', 
             color: '#000000', 
             backgroundColor: '#bfbfbf', 
             description: 'Estrutural'
         },
         {
-            height: 200, 
+            height: '200px', 
             width: '70%', 
             color: '#000000', 
             backgroundColor: '#d9d9d9', 
             description: 'Gradual'
         },
         {
-            height: 200,
+            height: '200px',
             width: '70%',
             color: '#000000',
             backgroundColor: '#f2f2f2',
