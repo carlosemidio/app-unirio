@@ -4,6 +4,7 @@ import { FaEdit } from 'react-icons/fa'
 import React from 'react'
 
 import styles from "./styles.module.scss"
+import Image from 'next/image'
 
 const Toobar = ({ onSave, onRestore, handleOpenImpactsChange }) => {
     const onDragStart = (event, nodeType) => {
@@ -15,33 +16,57 @@ const Toobar = ({ onSave, onRestore, handleOpenImpactsChange }) => {
         <div className={styles.toobar}>
             <Container className={styles.toobarContainer}>
                 <div className={styles.itemsLeft}>
-                    <SaveIcon fontSize="large" onClick={onSave} />
-                    <FaEdit fontSize={32} className={styles.editBTN} onClick={onRestore} />
-                    <Button 
-                        type="submit" 
-                        color="primary" 
-                        onClick={handleOpenImpactsChange}>Change Impacts</Button>
+                    <SaveIcon 
+                        fontSize="large" 
+                        onClick={onSave}
+                        titleAccess="Save flowchart"
+                        className={styles.itemsLeftBTN} />
+                    <FaEdit 
+                        fontSize={32}
+                        title="Restore flowchart"
+                        className={styles.itemsLeftBTN} 
+                        onClick={onRestore} />
+                    <Image
+                        width={24}
+                        height={24}
+                        className={styles.itemsLeftBTN}
+                        onClick={handleOpenImpactsChange}
+                        title="Change time impacts"
+                        src="/time-impacts.jpeg" />
+                    <Image
+                        width={24}
+                        height={24}
+                        className={styles.itemsLeftBTN}
+                        title="Generate report"
+                        src="/report.jpeg" />
                 </div>
                 <div className={styles.itemsRight}>
                     <button 
-                        className={styles.siBTN} 
+                        className={styles.siBTN}
+                        title="System node"
                         onDragStart={(event) => onDragStart(event, 'SiNode')} 
                         draggable>SI</button>
                     <div 
                         onDragStart={(event) => onDragStart(event, 'ActorNode')} 
                         draggable>
-                        <GroupIcon fontSize="large" className={styles.iconBTN}/>
+                        <GroupIcon 
+                            fontSize="large" 
+                            titleAccess="Actor node"
+                            className={styles.iconBTN}/>
                     </div>
                     <button 
                         className={styles.rBTN} 
+                        title="Vertice node"
                         onDragStart={(event) => onDragStart(event, 'VRNode')} 
                         draggable>R</button>
                     <span 
-                        className={styles.aBTN} 
+                        className={styles.aBTN}
+                        title="Text node" 
                         onDragStart={(event) => onDragStart(event, 'TextNode')} 
                         draggable>A</span>
                     <button 
-                        className={styles.criteriaBTN} 
+                        className={styles.criteriaBTN}
+                        title="Acountability Criteria node" 
                         onDragStart={(event) => onDragStart(event, 'ACRNode')} 
                         draggable>Acountability Criteria</button>
                 </div>

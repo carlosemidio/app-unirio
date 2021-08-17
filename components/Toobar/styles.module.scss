@@ -15,11 +15,11 @@
 
     .itemsLeft {
         display: flex;
-        justify-content: flex-start;
-        width: 40%;
+        justify-content: space-between;
+        width: 20%;
 
-        .editBTN {
-            margin-left: 20px;
+        .itemsLeftBTN {
+            cursor: pointer;
         }
     }
 
@@ -27,7 +27,8 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        width: 60%;
+        padding-left: 20%;
+        width: 80%;
    
         .iconBTN {
             cursor: pointer;
