@@ -104,21 +104,21 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
     const [impatcSelected, setImpatcSelected] = useState(0);
     const [impacts, setImpacts] = useState([
         {
-            height: '200px', 
+            height: 200, 
             width: '70%', 
             color: '#000000', 
             backgroundColor: '#bfbfbf', 
             description: 'Estrutural'
         },
         {
-            height: '200px', 
+            height: 200, 
             width: '70%', 
             color: '#000000', 
             backgroundColor: '#d9d9d9', 
             description: 'Gradual'
         },
         {
-            height: '200px',
+            height: 200,
             width: '70%',
             color: '#000000',
             backgroundColor: '#f2f2f2',
@@ -422,7 +422,7 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
     }
 
     return (
-        <div style={{ width: '100%', height: (impacts[0].height+impacts[1].height+impacts[2].height), background: 'transparent' }} ref={reactFlowWrapper}>
+        <div style={{ width: '100%', height: '100%', background: 'transparent' }} ref={reactFlowWrapper}>
             <div style={{
                 width: '100%', 
                 height: '100%',

@@ -13,6 +13,7 @@ import {
 import * as yup from 'yup';
 
 import styles from "./styles.module.scss";
+import { number } from 'yup/lib/locale';
 
 const Form = ({ impact, handleImpactsChange, handleCloseImpactChanges }) => {
   return (
@@ -21,7 +22,7 @@ const Form = ({ impact, handleImpactsChange, handleCloseImpactChanges }) => {
             <CardContent>
                 <TextField
                     id="width"
-                    label="Width"
+                    label="Width (css)"
                     type="text"
                     value={impact?.width}
                     onChange={ event => handleImpactsChange('width', event.target.value) }
@@ -31,17 +32,17 @@ const Form = ({ impact, handleImpactsChange, handleCloseImpactChanges }) => {
                 />
                 <TextField
                     id="height"
-                    label="Height"
-                    type="text"
+                    label="Height (px)"
+                    type="number"
                     value={impact?.height}
-                    onChange={ event => handleImpactsChange('height', event.target.value) }
+                    onChange={ event => handleImpactsChange('height', parseInt(event.target.value)) }
                     margin="dense"
                     variant="outlined"
                     fullWidth
                 />
                 <TextField
                     id="color"
-                    label="Text Color"
+                    label="Text Color (css)"
                     type="text"
                     value={impact?.color}
                     onChange={ event => handleImpactsChange('color', event.target.value) }
@@ -51,7 +52,7 @@ const Form = ({ impact, handleImpactsChange, handleCloseImpactChanges }) => {
                 />
                 <TextField
                     id="backgroundColor"
-                    label="Background Color"
+                    label="Background Color (css)"
                     type="text"
                     value={impact?.backgroundColor}
                     onChange={ event => handleImpactsChange('backgroundColor', event.target.value) }
