@@ -2,7 +2,7 @@ import React, { memo, useState } from 'react';
 
 import { Handle } from 'react-flow-renderer';
 
-const SiNode = (({ data }) => {
+const SiNode = (({ data, handleEditNode }) => {
 
   const [oldPosition, setOldPosition] = useState([0, 0]);
 

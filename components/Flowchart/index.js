@@ -77,7 +77,6 @@ let currentLine = [];
 
 const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaISO }) => {
     const classes = useStyles();
-
     const [projectSystems, setProjectSystems ] = useState(systems);
     const [projectActors, setProjectActors ] = useState(actors);
     const [projectVertices, setProjectVertices ] = useState(vertices);
@@ -131,11 +130,10 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
         setImpactsChange(false);
     }
 
-    const handleImpactsChange = (field, value) => {
+    const handleImpactsChange = async (field, value) => {
         let impactList = [...impacts];
         impactList[impatcSelected][field] = value;
-
-        setImpacts(impactList);
+        await setImpacts([...impactList]);
     }
 
     const handleConnect = (params, els) => {
@@ -347,20 +345,41 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
 
     const { transform } = useZoomPanHelper();
 
-    const onSave = useCallback(() => {
-        alert('Flow saved');
-
+    const onSave = useCallback(async () => {
         if (rfInstance) {
-            const flow = rfInstance.toObject();
-            localforage.setItem(flowKey, flow);
-            localforage.setItem('nodesId', id);
+            const flow = await rfInstance.toObject();
+
+            console.log(impacts);
+
+            setTimeout(() => {
+
+                // submit to the server
+                const requestOptions = {
+                  method: 'PATCH',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({diagram: {
+                    'flow': flow,
+                    'nodesId': id,
+                    'impacts': impacts,
+                  }}),
+                };
+          
+                fetch(`${process.env.NEXT_PUBLIC_API_URL}/projetos/${project.pk}/`, requestOptions)
+                  .then((response) => response.json())
+                  .then((data) => {
+                    project = data;
+                    console.log(data);
+                    alert('Flow saved');
+                  });
+              }, 1000);
         }
-    }, [rfInstance]);
+    }, [rfInstance, impacts]);
 
     const onRestore = useCallback(() => {
         const restoreFlow = async () => {
-            const flow = await localforage.getItem(flowKey);
-            id = await localforage.getItem('nodesId');
+            const flow = await project.diagram.flow;
+            id = await project.diagram.nodesId;
+            setImpacts(project.diagram.impacts)
 
             if (flow) {
                 const [x = 0, y = 0] = flow.position;
@@ -421,9 +440,12 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
         }
     }
 
+    onRestore();
+
     return (
         <div style={{ width: '100%', height: '100%', background: 'transparent' }} ref={reactFlowWrapper}>
             <div style={{
+                maxWidth: '100%',
                 width: '100%', 
                 height: '100%',
                 position: 'absolute',
@@ -433,28 +455,26 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
             }}>
                 <div style={{
                     position: 'relative',
+                    maxWidth: '100%',
                     width: impacts[0].width,
                     height: impacts[0].height,
                     backgroundColor: impacts[0].backgroundColor,
                     color: impacts[0].color,
-                    padding: 15,
-                }}>{impacts[0].description}</div>
+                }}><p style={{ padding: 15 }}>{impacts[0].description}</p></div>
                 <div style={{
                     position: 'relative',
                     width: impacts[1].width,
                     height: impacts[1].height,
                     backgroundColor: impacts[1].backgroundColor,
                     color: impacts[1].color,
-                    padding: 15,
-                }}>{impacts[1].description}</div>
+                }}><p style={{ padding: 15 }}>{impacts[1].description}</p></div>
                 <div style={{
                     position: 'relative',
                     width: impacts[2].width,
                     height: impacts[2].height,
                     backgroundColor: impacts[2].backgroundColor,
                     color: impacts[2].color,
-                    padding: 15,
-                }}>{impacts[2].description}</div>
+                }}><p style={{ padding: 15 }}>{impacts[0].description}</p></div>
             </div>
             <ReactFlow
                 elements={elements}

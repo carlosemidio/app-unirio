@@ -67,6 +67,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   const project = await resProject.json();
 
+  console.log(project);
+
   const resSystems = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/sistemas/?projeto=${id}`
   );

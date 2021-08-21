@@ -1,4 +1,5 @@
 import React, { memo } from 'react';
+import { useState } from 'react';
 
 import { Handle } from 'react-flow-renderer';
 
@@ -11,8 +12,7 @@ const backgroundColors = {
 const ACRNode = (({ data }) => {
   return (
     <>
-      <div
-        onClick={event => alert("test click")}
+      <div 
         style={{
           border: '1px solid #000000',
           backgroundColor: backgroundColors[data?.item?.criterio_accountability],

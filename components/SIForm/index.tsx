@@ -8,6 +8,7 @@ import {
 } from '@material-ui/core';
 import { withFormik, FormikProps } from 'formik';
 import * as yup from 'yup';
+import MuiMultSelect from '../MuiMultSelect';
 
 import styles from "./styles.module.scss";
 
