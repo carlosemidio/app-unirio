@@ -2,7 +2,7 @@ import React, { memo, useState } from 'react';
 
 import { Handle } from 'react-flow-renderer';
 
-const SiNode = (({ data, handleEditNode }) => {
+const SiNode = (({ id, data }) => {
 
   const [oldPosition, setOldPosition] = useState([0, 0]);
 
@@ -15,7 +15,11 @@ const SiNode = (({ data, handleEditNode }) => {
       }
       onClick={event => {
         if ((oldPosition[0] == event.clientX) && (oldPosition[1] == event.clientY)) {
-          alert("Button clicked!");
+          data.handleViewItem({ 
+            id: id,
+            type: 'SiNode',
+            data
+          });
         }
       }}>
       <Handle

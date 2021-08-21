@@ -31,6 +31,7 @@ import SiEdge from './Edges/SiEdge';
 import AcrEdge from './Edges/ACREdge';
 import SignedEdge from './Edges/SignedEdge';
 import ImpactsForm from '../ImpactsForm';
+import SystemView from '../SystemView';
 
 const useStyles = makeStyles((theme) => ({
     modal: {
@@ -94,7 +95,10 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
     const [criteriaType, setCriteriaType] = useState(true);
     const [addLine, setAddLine] = useState(false);
 
+    const [viewingItem, setViewingItem] = useState(false);
+
     const [impactsChange, setImpactsChange] = useState(false);
+
     const handleOpenImpactsChange = () => {
         setImpactsChange(true);
         handleOpenModal();
@@ -134,6 +138,13 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
         let impactList = [...impacts];
         impactList[impatcSelected][field] = value;
         await setImpacts([...impactList]);
+    }
+
+    const handleViewItem = (node) => {
+        currentNode = node;
+        console.log(node);
+        handleOpenModal();
+        setViewingItem(true);
     }
 
     const handleConnect = (params, els) => {
@@ -212,11 +223,12 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
                 })[0];
         
                 if (system) {
-                    currentNode.data = { 
+                    currentNode.data = {
                         title: `${system.nome}`,
-                        item: system
+                        item: system,
+                        handleViewItem: handleViewItem,
                     };
-            
+ 
                     setElements((es) => es.concat(currentNode));
                     handleCloseModal();
                 }
@@ -349,7 +361,7 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
         if (rfInstance) {
             const flow = await rfInstance.toObject();
 
-            console.log(impacts);
+            console.log(flow.elements);
 
             setTimeout(() => {
 
@@ -368,7 +380,6 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
                   .then((response) => response.json())
                   .then((data) => {
                     project = data;
-                    console.log(data);
                     alert('Flow saved');
                   });
               }, 1000);
@@ -381,9 +392,17 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
             id = await project.diagram.nodesId;
             setImpacts(project.diagram.impacts)
 
+            const elements = await flow.elements.map(element => {
+                if (element.type == 'SiNode') {
+                    element.data.handleViewItem = handleViewItem;
+                }
+
+                return element;
+            });
+
             if (flow) {
                 const [x = 0, y = 0] = flow.position;
-                setElements(flow.elements || []);
+                setElements(elements || []);
                 transform({ x, y, zoom: flow.zoom || 0 });
             }
         };
@@ -439,8 +458,6 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
                 return <></>;
         }
     }
-
-    onRestore();
 
     return (
         <div style={{ width: '100%', height: '100%', background: 'transparent' }} ref={reactFlowWrapper}>
@@ -507,22 +524,22 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
             >
                 <Fade in={openModal}>
                     <div className={classes.paper}>
-                        {((currentNode?.type != 'TextNode') && !addLine && !impactsChange) ? <FormControl component="fieldset">
+                        {((currentNode?.type != 'TextNode') && !addLine && !impactsChange && !viewingItem) ? <FormControl component="fieldset">
                                 <RadioGroup aria-label="donationType" name="donationType1" style={{ display: 'flex', flexDirection: 'row' }}>
                                     <FormControlLabel value="0" onChange={ event => setNewItem(false) } checked={!newItem} control={<Radio />} label="Selecionar" />
                                     <FormControlLabel value="1" onChange={ event => setNewItem(true) } checked={newItem} control={<Radio />} label="Adicionar" />
                                 </RadioGroup>
                             </FormControl> : <></>
                         }
-                        {((currentNode?.type == 'ACRNode') && !addLine && !impactsChange) ? <FormControl component="fieldset">
+                        {((currentNode?.type == 'ACRNode') && !addLine && !impactsChange && !viewingItem) ? <FormControl component="fieldset">
                                 <RadioGroup aria-label="donationType" name="donationType1" style={{ display: 'flex', flexDirection: 'row' }}>
                                     <FormControlLabel value="ux" onChange={ event => setCriteriaType(true) } checked={criteriaType} control={<Radio />} label="UX" />
                                     <FormControlLabel value="iso" onChange={ event => setCriteriaType(false) } checked={!criteriaType} control={<Radio />} label="ISO" />
                                 </RadioGroup>
                             </FormControl> : <></>
                         }
-                        { (!addLine && !impactsChange) ? switchForm() : <></> }
-                        {(addLine && !impactsChange) ? <SelectSignal handleSelectItem={handleSignedLine} /> : <></>}
+                        { (!addLine && !impactsChange && !viewingItem) ? switchForm() : <></> }
+                        {addLine ? <SelectSignal handleSelectItem={handleSignedLine} /> : <></>}
                         { impactsChange ? <div>
                             <FormControl component="fieldset">
                                 <RadioGroup aria-label="impacts" name="impacts" style={{ display: 'flex', flexDirection: 'row' }}>
@@ -536,6 +553,7 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
                                 handleImpactsChange={handleImpactsChange} 
                                 handleCloseImpactChanges={handleCloseImpactChanges} />
                         </div> : <></> }
+                        { viewingItem ? <SystemView system={currentNode?.data?.item} /> : <></> }
                     </div>
                 </Fade>
             </Modal>

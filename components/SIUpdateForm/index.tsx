@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Card,
   CardContent,
@@ -23,9 +23,10 @@ interface Option {
 
 // Shape of form values
 interface FormValues {
+  systemId?: string;
   projeto: string;
   nome: string;
-  handleNewSystem: (data: Object) => null;
+  handleUpdateSystem: (data: Object) => null;
 }
 
 const form = (props: FormikProps<FormValues>) => {
@@ -40,6 +41,8 @@ const form = (props: FormikProps<FormValues>) => {
     handleSubmit,
     handleReset,
   } = props;
+
+  console.log(values);
 
   return (
     <div className={styles.container}>
@@ -72,7 +75,7 @@ const form = (props: FormikProps<FormValues>) => {
           </CardContent>
           <CardActions className={styles.actions}>
             <Button type="submit" color="primary" disabled={isSubmitting}>
-              Adicionar Sistema
+              Atualizar Sistema
             </Button>
             <Button color="secondary" onClick={handleReset}>
               Cancelar
@@ -85,39 +88,41 @@ const form = (props: FormikProps<FormValues>) => {
 };
 
 interface MyFormProps {
+  systemId: string;
   projeto: string;
   nome: string;
-  handleNewSystem: (data: Object) => null;
+  handleUpdateSystem: (data: Object) => null;
 }
 
 const Form = withFormik<MyFormProps, FormValues>({
-  mapPropsToValues: ({ projeto, nome, handleNewSystem }) => {
+  mapPropsToValues: ({ systemId, projeto, nome, handleUpdateSystem }) => {
     return {
+      systemId: systemId || '',
       projeto: projeto,
       nome: nome || '',
-      handleNewSystem: handleNewSystem,
+      handleUpdateSystem: handleUpdateSystem,
     };
   },
 
   validationSchema: yup.object().shape(validationsForm),
 
   handleSubmit: (values, { props, setSubmitting, resetForm }) => {
-    const { handleNewSystem } = props;
+    const { handleUpdateSystem } = props;
 
     setTimeout(() => {
       // submit to the server
       const requestOptions = {
-        method: 'POST',
+        method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(values),
       };
 
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/sistemas/`, requestOptions)
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/sistemas/${values.systemId}`, requestOptions)
         .then((response) => response.json())
         .then((data) => {
           setSubmitting(false);
           resetForm();
-          handleNewSystem(data);
+          handleUpdateSystem(data);
         });
     }, 1000);
   },
