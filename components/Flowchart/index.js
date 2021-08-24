@@ -391,7 +391,7 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
         
                 if (criteria) {
                     currentNode.data = { 
-                        title: `${criteria.descricao}`,
+                        title: `${criteria.indicador}`,
                         item: criteria
                     };
             
@@ -552,10 +552,10 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
                             : <ACRForm key='iso' criteriaType={criteriaType} handleNewCriteria={handleNewCriteria} />)
                     : (
                         criteriaType ? <SelectForm key='selectUX' options={ criteriaux.map(criteria => {
-                            return {name: criteria?.descricao, value: criteria.pk};
+                            return {name: criteria?.indicador, value: criteria.pk};
                         }) } type={type} handleSelectItem={handleSelectItem} />
                         : <SelectForm key='selectISO' options={ criteriaiso.map(criteria => {
-                            return {name: criteria?.descricao, value: criteria.pk};
+                            return {name: criteria?.indicador, value: criteria.pk};
                         }) } type={type} handleSelectItem={handleSelectItem} />
                     )
                 );
