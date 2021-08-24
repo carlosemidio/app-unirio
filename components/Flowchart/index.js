@@ -33,6 +33,7 @@ import AcrEdge from './Edges/ACREdge';
 import SignedEdge from './Edges/SignedEdge';
 import ImpactsForm from '../ImpactsForm';
 import SystemView from '../SystemView';
+import ActorView from '../ActorView';
 
 const useStyles = makeStyles((theme) => ({
     modal: {
@@ -182,6 +183,40 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
 
         setViewingItem(false);
         handleCloseModal();
+        onSave();
+    }
+
+    const handleUpdateActor = (actor) => {
+        let actors = projectActors.map(item => {
+            if (actor.pk == item.id) {
+                return actor;
+            } else {
+                return item;
+            }
+        });
+
+        setProjectActors(actors);
+        
+        currentNode.data = {
+            title: `${actor.nome}`,
+            item: actor,
+            handleViewItem: handleViewItem,
+        };
+
+        setElements((els) => {
+            return els.map(el => {
+                if ((el.id == currentNode.id)) {
+                    currentNode['position'] = el.position;
+                    return currentNode;
+                } else {
+                    return el;
+                }
+            })
+        });
+
+        setViewingItem(false);
+        handleCloseModal();
+        onSave();
     }
 
     const handleConnect = (params, els) => {
@@ -282,7 +317,8 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
                 if (actor) {
                     currentNode.data = { 
                         title: `${actor.nome}`,
-                        item: actor
+                        item: actor,
+                        handleViewItem: handleViewItem,
                     };
             
                     setElements((es) => es.concat(currentNode));
@@ -428,7 +464,7 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
             setImpacts(project.diagram.impacts)
 
             const elements = await flow.elements.map(element => {
-                if (element.type == 'SiNode') {
+                if ((element.type == 'SiNode') || (element.type == 'ActorNode')) {
                     element.data.handleViewItem = handleViewItem;
                 }
 
@@ -445,7 +481,7 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
         restoreFlow();
     }, [setElements, transform]);
 
-    function switchForm() {
+    const switchNodeForm = () => {
         const type = currentNode?.type;
 
         switch(type) {
@@ -491,6 +527,38 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
                 );
             default:
                 return <></>;
+        }
+    }
+
+    const switchItemView = () => {
+        switch (currentNode.type) {
+            case 'SiNode':
+                return (
+                    <SystemView 
+                        _system={currentNode?.data?.item}
+                        handleUpdateSystem={handleUpdateSystem}
+                        handleCloseView={handleCloseViewItem} />
+                );
+                break;
+            case 'ActorNode':
+                return (
+                    <ActorView 
+                        _actor={currentNode?.data?.item}
+                        handleUpdateActor={handleUpdateActor}
+                        handleCloseView={handleCloseViewItem} />
+                );
+                break;
+            case 'VRNode':
+                return (
+                    <SystemView 
+                        _system={currentNode?.data?.item}
+                        handleUpdateSystem={handleUpdateSystem}
+                        handleCloseView={handleCloseViewItem} />
+                );
+                break;
+        
+            default:
+                break;
         }
     }
 
@@ -573,7 +641,7 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
                                 </RadioGroup>
                             </FormControl> : <></>
                         }
-                        { (!addLine && !impactsChange && !viewingItem) ? switchForm() : <></> }
+                        { (!addLine && !impactsChange && !viewingItem) ? switchNodeForm() : <></> }
                         {addLine ? <SelectSignal handleSelectItem={handleSignedLine} /> : <></>}
                         { impactsChange ? <div>
                             <FormControl component="fieldset">
@@ -588,10 +656,7 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
                                 handleImpactsChange={handleImpactsChange} 
                                 handleCloseImpactChanges={handleCloseImpactChanges} />
                         </div> : <></> }
-                        { viewingItem ? <SystemView 
-                            _system={currentNode?.data?.item}
-                            handleUpdateSystem={handleUpdateSystem}
-                            handleCloseView={handleCloseViewItem} /> : <></> }
+                        { viewingItem ? switchItemView() : <></> }
                     </div>
                 </Fade>
             </Modal>

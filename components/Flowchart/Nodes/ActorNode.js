@@ -3,7 +3,7 @@ import React, { memo, useState } from 'react';
 import { Handle } from 'react-flow-renderer';
 import AccessibilityNewIcon from '@material-ui/icons/AccessibilityNew';
 
-const ActorNode = (({ data }) => {
+const ActorNode = (({ id, data }) => {
   const [oldPosition, setOldPosition] = useState([0, 0]);
 
   return (
@@ -15,7 +15,11 @@ const ActorNode = (({ data }) => {
       }
       onClick={event => {
         if ((oldPosition[0] == event.clientX) && (oldPosition[1] == event.clientY)) {
-          alert("Button clicked!");
+          data.handleViewItem({ 
+            id: id,
+            type: 'ActorNode',
+            data
+          });
         }
       }}
     >
