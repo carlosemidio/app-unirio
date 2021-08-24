@@ -11,6 +11,7 @@ import ReactFlow, {
   MiniMap,
   Controls,
   Background,
+  isNode
 } from 'react-flow-renderer';
 import { FormControl, FormControlLabel, RadioGroup, Radio } from '@material-ui/core';
 import SiNode from './Nodes/SiNode';
@@ -142,9 +143,45 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
 
     const handleViewItem = (node) => {
         currentNode = node;
-        console.log(node);
         handleOpenModal();
         setViewingItem(true);
+    }
+
+    const handleCloseViewItem = () => {
+        handleCloseModal();
+        setViewingItem(false);
+    }
+
+    const handleUpdateSystem = (system) => {
+        let systems = projectSystems.map(item => {
+            if (system.pk == item.id) {
+                return system;
+            } else {
+                return item;
+            }
+        });
+
+        setProjectSystems(systems);
+        
+        currentNode.data = {
+            title: `${system.nome}`,
+            item: system,
+            handleViewItem: handleViewItem,
+        };
+
+        setElements((els) => {
+            return els.map(el => {
+                if ((el.id == currentNode.id)) {
+                    currentNode['position'] = el.position;
+                    return currentNode;
+                } else {
+                    return el;
+                }
+            })
+        });
+
+        setViewingItem(false);
+        handleCloseModal();
     }
 
     const handleConnect = (params, els) => {
@@ -361,8 +398,6 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
         if (rfInstance) {
             const flow = await rfInstance.toObject();
 
-            console.log(flow.elements);
-
             setTimeout(() => {
 
                 // submit to the server
@@ -553,7 +588,10 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
                                 handleImpactsChange={handleImpactsChange} 
                                 handleCloseImpactChanges={handleCloseImpactChanges} />
                         </div> : <></> }
-                        { viewingItem ? <SystemView system={currentNode?.data?.item} /> : <></> }
+                        { viewingItem ? <SystemView 
+                            _system={currentNode?.data?.item}
+                            handleUpdateSystem={handleUpdateSystem}
+                            handleCloseView={handleCloseViewItem} /> : <></> }
                     </div>
                 </Fade>
             </Modal>

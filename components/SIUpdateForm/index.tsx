@@ -16,17 +16,13 @@ const validationsForm = {
   nome: yup.string().required('O nome é obrigatório'),
 };
 
-interface Option {
-  name: string;
-  value:string;
-}
-
 // Shape of form values
 interface FormValues {
   systemId?: string;
   projeto: string;
   nome: string;
-  handleUpdateSystem: (data: Object) => null;
+  handleUpdateSystem: (data: Object) => void;
+  handleCloseModal: () => void;
 }
 
 const form = (props: FormikProps<FormValues>) => {
@@ -41,8 +37,6 @@ const form = (props: FormikProps<FormValues>) => {
     handleSubmit,
     handleReset,
   } = props;
-
-  console.log(values);
 
   return (
     <div className={styles.container}>
@@ -77,7 +71,7 @@ const form = (props: FormikProps<FormValues>) => {
             <Button type="submit" color="primary" disabled={isSubmitting}>
               Atualizar Sistema
             </Button>
-            <Button color="secondary" onClick={handleReset}>
+            <Button color="secondary" onClick={values.handleCloseModal}>
               Cancelar
             </Button>
           </CardActions>
@@ -91,16 +85,18 @@ interface MyFormProps {
   systemId: string;
   projeto: string;
   nome: string;
-  handleUpdateSystem: (data: Object) => null;
+  handleUpdateSystem: (data: Object) => void;
+  handleCloseModal: () => void;
 }
 
 const Form = withFormik<MyFormProps, FormValues>({
-  mapPropsToValues: ({ systemId, projeto, nome, handleUpdateSystem }) => {
+  mapPropsToValues: ({ systemId, projeto, nome, handleUpdateSystem, handleCloseModal }) => {
     return {
       systemId: systemId || '',
       projeto: projeto,
       nome: nome || '',
       handleUpdateSystem: handleUpdateSystem,
+      handleCloseModal: handleCloseModal
     };
   },
 
@@ -117,7 +113,7 @@ const Form = withFormik<MyFormProps, FormValues>({
         body: JSON.stringify(values),
       };
 
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/sistemas/${values.systemId}`, requestOptions)
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/sistemas/${values.systemId}/`, requestOptions)
         .then((response) => response.json())
         .then((data) => {
           setSubmitting(false);
