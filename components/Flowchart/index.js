@@ -8,10 +8,7 @@ import ReactFlow, {
   removeElements,
   addEdge,
   useZoomPanHelper,
-  MiniMap,
   Controls,
-  Background,
-  isNode
 } from 'react-flow-renderer';
 import { FormControl, FormControlLabel, RadioGroup, Radio } from '@material-ui/core';
 import SiNode from './Nodes/SiNode';
@@ -34,6 +31,7 @@ import SignedEdge from './Edges/SignedEdge';
 import ImpactsForm from '../ImpactsForm';
 import SystemView from '../SystemView';
 import ActorView from '../ActorView';
+import VerticeView from '../VerticeView';
 
 const useStyles = makeStyles((theme) => ({
     modal: {
@@ -150,7 +148,6 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
 
     const handleCloseViewItem = () => {
         handleCloseModal();
-        setViewingItem(false);
     }
 
     const handleUpdateSystem = (system) => {
@@ -200,6 +197,39 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
         currentNode.data = {
             title: `${actor.nome}`,
             item: actor,
+            handleViewItem: handleViewItem,
+        };
+
+        setElements((els) => {
+            return els.map(el => {
+                if ((el.id == currentNode.id)) {
+                    currentNode['position'] = el.position;
+                    return currentNode;
+                } else {
+                    return el;
+                }
+            })
+        });
+
+        setViewingItem(false);
+        handleCloseModal();
+        onSave();
+    }
+
+    const handleUpdateVertice = (vertice) => {
+        let vertices = projectActors.map(item => {
+            if (vertice.pk == item.id) {
+                return vertice;
+            } else {
+                return item;
+            }
+        });
+
+        setProjectVertices(vertices);
+        
+        currentNode.data = {
+            title: `${vertice.descricao}`,
+            item: vertice,
             handleViewItem: handleViewItem,
         };
 
@@ -283,6 +313,10 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
     
     const handleCloseModal = () => {
         setOpenModal( false );
+        
+        if (viewingItem) {
+            setViewingItem(false);
+        }
     }
 
     const handleSelectItem = (itemId, type) => {
@@ -337,7 +371,8 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
                 if (vertice) {
                     currentNode.data = { 
                         title: `${vertice.descricao}`,
-                        item: vertice
+                        item: vertice,
+                        handleViewItem: handleViewItem,
                     };
             
                     setElements((es) => es.concat(currentNode));
@@ -464,7 +499,7 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
             setImpacts(project.diagram.impacts)
 
             const elements = await flow.elements.map(element => {
-                if ((element.type == 'SiNode') || (element.type == 'ActorNode')) {
+                if ((element.type == 'SiNode') || (element.type == 'ActorNode') || (element.type == 'VRNode')) {
                     element.data.handleViewItem = handleViewItem;
                 }
 
@@ -550,9 +585,9 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
                 break;
             case 'VRNode':
                 return (
-                    <SystemView 
-                        _system={currentNode?.data?.item}
-                        handleUpdateSystem={handleUpdateSystem}
+                    <VerticeView 
+                        _vertice={currentNode?.data?.item}
+                        handleUpdateVertice={handleUpdateVertice}
                         handleCloseView={handleCloseViewItem} />
                 );
                 break;

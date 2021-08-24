@@ -69,7 +69,7 @@ const form = (props: FormikProps<FormValues>) => {
           </CardContent>
           <CardActions className={styles.actions}>
             <Button type="submit" color="primary" disabled={isSubmitting}>
-              Atualizar Sistema
+              Atualizar Ator
             </Button>
             <Button color="secondary" onClick={values.handleCloseModal}>
               Cancelar

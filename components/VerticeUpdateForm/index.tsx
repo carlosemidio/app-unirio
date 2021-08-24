@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Card,
   CardContent,
   CardActions,
   TextField,
-  Button
+  Button,
 } from '@material-ui/core';
 import { withFormik, FormikProps } from 'formik';
 import * as yup from 'yup';
@@ -13,19 +13,16 @@ import styles from "./styles.module.scss";
 
 const validationsForm = {
   projeto: yup.number().required('O projeto é obrigatório'),
-  nome: yup.string().required('O nome é obrigatório'),
+  descricao: yup.string().required('O descricao é obrigatório'),
 };
-
-interface Option {
-  name: string;
-  value:string;
-}
 
 // Shape of form values
 interface FormValues {
+  verticeId?: string;
   projeto: string;
-  nome: string;
-  handleNewActor: (data: Object) => null;
+  descricao: string;
+  handleUpdateVertice: (data: Object) => void;
+  handleCloseModal: () => void;
 }
 
 const form = (props: FormikProps<FormValues>) => {
@@ -47,13 +44,13 @@ const form = (props: FormikProps<FormValues>) => {
         <Card className={styles.card}>
           <CardContent>
             <TextField
-              id="nome"
-              label="Ator Responsável"
-              value={values.nome}
+              id="descricao"
+              label="Descrição do Vértice de Responsabilidade"
+              value={values.descricao}
               onChange={handleChange}
               onBlur={handleBlur}
-              helperText={touched.nome ? errors.nome : ''}
-              error={touched.nome && Boolean(errors.nome)}
+              helperText={touched.descricao ? errors.descricao : ''}
+              error={touched.descricao && Boolean(errors.descricao)}
               margin="dense"
               variant="outlined"
               fullWidth
@@ -72,9 +69,9 @@ const form = (props: FormikProps<FormValues>) => {
           </CardContent>
           <CardActions className={styles.actions}>
             <Button type="submit" color="primary" disabled={isSubmitting}>
-              Enviar
+              Atualizar Vértice
             </Button>
-            <Button color="secondary" onClick={handleReset}>
+            <Button color="secondary" onClick={values.handleCloseModal}>
               Cancelar
             </Button>
           </CardActions>
@@ -85,39 +82,43 @@ const form = (props: FormikProps<FormValues>) => {
 };
 
 interface MyFormProps {
+  verticeId: string;
   projeto: string;
-  nome: string;
-  handleNewActor: (data: Object) => null;
+  descricao: string;
+  handleUpdateVertice: (data: Object) => void;
+  handleCloseModal: () => void;
 }
 
 const Form = withFormik<MyFormProps, FormValues>({
-  mapPropsToValues: ({ projeto, nome, handleNewActor }) => {
+  mapPropsToValues: ({ verticeId, projeto, descricao, handleUpdateVertice, handleCloseModal }) => {
     return {
+      verticeId: verticeId || '',
       projeto: projeto,
-      nome: nome || '',
-      handleNewActor: handleNewActor,
+      descricao: descricao || '',
+      handleUpdateVertice: handleUpdateVertice,
+      handleCloseModal: handleCloseModal
     };
   },
 
   validationSchema: yup.object().shape(validationsForm),
 
   handleSubmit: (values, { props, setSubmitting, resetForm }) => {
-    const { handleNewActor } = props;
+    const { handleUpdateVertice } = props;
 
     setTimeout(() => {
       // submit to the server
       const requestOptions = {
-        method: 'POST',
+        method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(values),
       };
 
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/atores/`, requestOptions)
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/vertices/${values.verticeId}/`, requestOptions)
         .then((response) => response.json())
         .then((data) => {
           setSubmitting(false);
           resetForm();
-          handleNewActor(data);
+          handleUpdateVertice(data);
         });
     }, 1000);
   },

@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormControl, RadioGroup, FormControlLabel, Radio } from '@material-ui/core';
-import ActorUpdateForm from '../ActorUpdateForm';
+import VerticeUpdateForm from '../VerticeUpdateForm';
 import { useState } from 'react';
 import ConditionForm from '../ConditionForm';
 import ObligationForm from '../ObligationForm';
@@ -29,10 +29,10 @@ interface ResponsabilityProps {
   descricao: string;
 }
 
-interface ActorProps {
+interface VerticeProps {
   pk: string;
   projeto: string;
-  nome: string;
+  descricao: string;
   condicoes: Array<ConditionProps>;
   obrigacoes: Array<ObligationProps>;
   sancoes: Array<SanctionProps>;
@@ -40,41 +40,41 @@ interface ActorProps {
 }
 
 interface IProps {
-  _actor: ActorProps;
-  handleUpdateActor: (data: Object) => void;
+  _vertice: VerticeProps;
+  handleUpdateVertice: (data: Object) => void;
   handleCloseView: () => void;
 }
 
-const ActorView: React.FC<IProps> = ({ _actor, handleUpdateActor, handleCloseView }) => {
+const VerticeView: React.FC<IProps> = ({ _vertice, handleUpdateVertice, handleCloseView }) => {
   const [item, setItem] = useState(0);
-  const [actor, setActor] = useState(_actor);
+  const [vertice, setVertice] = useState(_vertice);
 
   const handleNewCondition = (condition: ConditionProps) => {
-    let auxActor = {...actor};
-    auxActor.condicoes.push(condition);
-    setActor(auxActor);
-    handleUpdateActor(auxActor);
+    let auxVertice = {...vertice};
+    auxVertice.condicoes.push(condition);
+    setVertice(auxVertice);
+    handleUpdateVertice(auxVertice);
   }
 
   const handleNewObligation = (obligation: ObligationProps) => {
-    let auxActor = {...actor};
-    auxActor.obrigacoes.push(obligation);
-    setActor(auxActor);
-    handleUpdateActor(auxActor);
+    let auxVertice = {...vertice};
+    auxVertice.obrigacoes.push(obligation);
+    setVertice(auxVertice);
+    handleUpdateVertice(auxVertice);
   }
 
   const handleNewSanction = (sanction: SanctionProps) => {
-    let auxActor = {...actor};
-    auxActor.sancoes.push(sanction);
-    setActor(auxActor);
-    handleUpdateActor(auxActor);
+    let auxVertice = {...vertice};
+    auxVertice.sancoes.push(sanction);
+    setVertice(auxVertice);
+    handleUpdateVertice(auxVertice);
   }
 
   const handleNewResponsability = (responsability: ResponsabilityProps) => {
-    let auxActor = {...actor};
-    auxActor.responsabilidades.push(responsability);
-    setActor(auxActor);
-    handleUpdateActor(auxActor);
+    let auxVertice = {...vertice};
+    auxVertice.responsabilidades.push(responsability);
+    setVertice(auxVertice);
+    handleUpdateVertice(auxVertice);
   }
 
   const listItems = () => {
@@ -83,11 +83,11 @@ const ActorView: React.FC<IProps> = ({ _actor, handleUpdateActor, handleCloseVie
         return (
           <div>
             <ul className={styles.itemList}>
-              {actor.condicoes.map(condition => (
-                <li key={condition.pk}>{condition.descricao}</li>
+              {vertice?.condicoes?.map(condition => (
+                <li key={condition?.pk}>{condition?.descricao}</li>
               ))}
             </ul>
-            <ConditionForm ator={actor.pk} handleNewCondition={handleNewCondition} />
+            <ConditionForm vertice={vertice?.pk} handleNewCondition={handleNewCondition} />
           </div>  
         );
         break;
@@ -95,9 +95,9 @@ const ActorView: React.FC<IProps> = ({ _actor, handleUpdateActor, handleCloseVie
         return (
           <div>
             <ul className={styles.itemList}>
-              {actor.obrigacoes.map(obligation => (
-                <li key={obligation.pk}>{obligation.descricao}</li>))}</ul>
-            <ObligationForm ator={actor.pk} handleNewObligation={handleNewObligation} />
+              {vertice?.obrigacoes?.map(obligation => (
+                <li key={obligation?.pk}>{obligation?.descricao}</li>))}</ul>
+            <ObligationForm vertice={vertice?.pk} handleNewObligation={handleNewObligation} />
           </div>
         );
         break;
@@ -105,9 +105,9 @@ const ActorView: React.FC<IProps> = ({ _actor, handleUpdateActor, handleCloseVie
         return (
           <div>
             <ul className={styles.itemList}>
-              {actor.sancoes.map(sanction => (
-                <li key={sanction.pk}>{sanction.descricao}</li>))}</ul>
-            <SanctionForm ator={actor.pk} handleNewSanction={handleNewSanction} />
+              {vertice?.sancoes?.map(sanction => (
+                <li key={sanction?.pk}>{sanction?.descricao}</li>))}</ul>
+            <SanctionForm vertice={vertice?.pk} handleNewSanction={handleNewSanction} />
           </div>
         );
         break;
@@ -115,9 +115,9 @@ const ActorView: React.FC<IProps> = ({ _actor, handleUpdateActor, handleCloseVie
         return (
           <div>
             <ul className={styles.itemList}>
-              {actor.responsabilidades.map(responsability => (
-                <li key={responsability.pk}>{responsability.descricao}</li>))}</ul>
-            <ResponsabilityForm ator={actor.pk} handleNewResponsability={handleNewResponsability} />
+              {vertice?.responsabilidades?.map(responsability => (
+                <li key={responsability?.pk}>{responsability?.descricao}</li>))}</ul>
+            <ResponsabilityForm vertice={vertice?.pk} handleNewResponsability={handleNewResponsability} />
           </div>
         );
         break;
@@ -129,11 +129,11 @@ const ActorView: React.FC<IProps> = ({ _actor, handleUpdateActor, handleCloseVie
 
   return (
     <div>
-      <ActorUpdateForm 
-        actorId={actor.pk}
-        projeto={actor.projeto}
-        nome={actor.nome}
-        handleUpdateActor={handleUpdateActor}
+      <VerticeUpdateForm 
+        verticeId={vertice.pk}
+        projeto={vertice.projeto}
+        descricao={vertice.descricao}
+        handleUpdateVertice={handleUpdateVertice}
         handleCloseModal={handleCloseView}
       />
     <div>
@@ -151,4 +151,4 @@ const ActorView: React.FC<IProps> = ({ _actor, handleUpdateActor, handleCloseVie
   );
 }
 
-export default ActorView;
+export default VerticeView;

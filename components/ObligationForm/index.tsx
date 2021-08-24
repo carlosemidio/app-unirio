@@ -21,7 +21,6 @@ const validationsForm = {
 interface ObligationProps {
   pk: string;
   descricao: string;
-  sistema: string;
 }
 
 // Shape of form values

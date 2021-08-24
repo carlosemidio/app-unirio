@@ -21,7 +21,6 @@ const validationsForm = {
 interface SanctionProps {
   pk: string;
   descricao: string;
-  sistema: string;
 }
 
 // Shape of form values
