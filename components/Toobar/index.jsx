@@ -1,12 +1,12 @@
-import { Button, Container } from '@material-ui/core'
-import {Save as SaveIcon, ArrowBack as ArrowBackIcon, Group as GroupIcon } from '@material-ui/icons'
-import { FaEdit } from 'react-icons/fa'
-import React from 'react'
+import React from 'react';
+import { Container } from '@material-ui/core';
+import {Save as SaveIcon, ArrowBack as ArrowBackIcon, Group as GroupIcon } from '@material-ui/icons';
+import { FaEdit } from 'react-icons/fa';
+import Image from 'next/image';
 
 import styles from "./styles.module.scss"
-import Image from 'next/image'
 
-const Toobar = ({ onSave, onRestore, handleOpenImpactsChange }) => {
+const Toobar = ({ onSave, onRestore, handleOpenImpactsChange, projectId }) => {
     const onDragStart = (event, nodeType) => {
         event.dataTransfer.setData('application/reactflow', nodeType);
         event.dataTransfer.effectAllowed = 'move';
@@ -33,11 +33,18 @@ const Toobar = ({ onSave, onRestore, handleOpenImpactsChange }) => {
                         onClick={handleOpenImpactsChange}
                         title="Change time impacts"
                         src="/time-impacts.jpeg" />
+                    
                     <Image
                         width={24}
                         height={24}
                         className={styles.itemsLeftBTN}
                         title="Generate report"
+                        onClick={async () => {
+                            if (process.browser) {
+                                await onSave();
+                                window.open(`http://67.205.182.13/relatorio/${projectId}/`, '_blank')
+                            }}
+                        }
                         src="/report.jpeg" />
                 </div>
                 <div className={styles.itemsRight}>

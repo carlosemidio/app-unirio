@@ -178,7 +178,6 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
             })
         });
 
-        setViewingItem(false);
         handleCloseModal();
         onSave();
     }
@@ -211,13 +210,12 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
             })
         });
 
-        setViewingItem(false);
         handleCloseModal();
         onSave();
     }
 
     const handleUpdateVertice = (vertice) => {
-        let vertices = projectActors.map(item => {
+        let vertices = projectVertices.map(item => {
             if (vertice.pk == item.id) {
                 return vertice;
             } else {
@@ -244,7 +242,6 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
             })
         });
 
-        setViewingItem(false);
         handleCloseModal();
         onSave();
     }
@@ -313,7 +310,7 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
     
     const handleCloseModal = () => {
         setOpenModal( false );
-        
+
         if (viewingItem) {
             setViewingItem(false);
         }
@@ -494,22 +491,24 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
 
     const onRestore = useCallback(() => {
         const restoreFlow = async () => {
-            const flow = await project.diagram.flow;
-            id = await project.diagram.nodesId;
-            setImpacts(project.diagram.impacts)
+            if (project.diagram) {
+                const flow = await project.diagram.flow;
+                id = await project.diagram.nodesId;
+                setImpacts(project.diagram.impacts)
 
-            const elements = await flow.elements.map(element => {
-                if ((element.type == 'SiNode') || (element.type == 'ActorNode') || (element.type == 'VRNode')) {
-                    element.data.handleViewItem = handleViewItem;
+                const elements = await flow.elements.map(element => {
+                    if ((element.type == 'SiNode') || (element.type == 'ActorNode') || (element.type == 'VRNode')) {
+                        element.data.handleViewItem = handleViewItem;
+                    }
+
+                    return element;
+                });
+
+                if (flow) {
+                    const [x = 0, y = 0] = flow.position;
+                    setElements(elements || []);
+                    transform({ x, y, zoom: flow.zoom || 0 });
                 }
-
-                return element;
-            });
-
-            if (flow) {
-                const [x = 0, y = 0] = flow.position;
-                setElements(elements || []);
-                transform({ x, y, zoom: flow.zoom || 0 });
             }
         };
 
@@ -584,6 +583,7 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
                 );
                 break;
             case 'VRNode':
+                console.log(currentNode?.data?.item);
                 return (
                     <VerticeView 
                         _vertice={currentNode?.data?.item}
@@ -647,7 +647,7 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
                 <Controls />
                 {/* <Background gap={16} /> */}
             </ReactFlow>
-            <Toobar onSave={onSave} onRestore={onRestore} handleOpenImpactsChange={handleOpenImpactsChange} />
+            <Toobar onSave={onSave} onRestore={onRestore} handleOpenImpactsChange={handleOpenImpactsChange} projectId={project.pk} />
             <Modal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
