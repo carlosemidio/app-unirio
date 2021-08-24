@@ -84,7 +84,7 @@ const SystemView: React.FC<IProps> = ({ _system, handleUpdateSystem, handleClose
           <div>
             <ul className={styles.itemList}>
               {system.condicoes.map(condition => (
-                <li>{condition.descricao}</li>
+                <li key={condition.pk}>{condition.descricao}</li>
               ))}
             </ul>
             <ConditionForm sistema={system.pk} handleNewCondition={handleNewCondition} />
@@ -96,7 +96,7 @@ const SystemView: React.FC<IProps> = ({ _system, handleUpdateSystem, handleClose
           <div>
             <ul className={styles.itemList}>
               {system.obrigacoes.map(obligation => (
-                <li>{obligation.descricao}</li>))}</ul>
+                <li key={obligation.pk}>{obligation.descricao}</li>))}</ul>
             <ObligationForm sistema={system.pk} handleNewObligation={handleNewObligation} />
           </div>
         );
@@ -106,7 +106,7 @@ const SystemView: React.FC<IProps> = ({ _system, handleUpdateSystem, handleClose
           <div>
             <ul className={styles.itemList}>
               {system.sancoes.map(sanction => (
-                <li>{sanction.descricao}</li>))}</ul>
+                <li key={sanction.pk}>{sanction.descricao}</li>))}</ul>
             <SanctionForm sistema={system.pk} handleNewSanction={handleNewSanction} />
           </div>
         );
@@ -116,7 +116,7 @@ const SystemView: React.FC<IProps> = ({ _system, handleUpdateSystem, handleClose
           <div>
             <ul className={styles.itemList}>
               {system.responsabilidades.map(responsability => (
-                <li>{responsability.descricao}</li>))}</ul>
+                <li key={responsability.pk}>{responsability.descricao}</li>))}</ul>
             <ResponsabilityForm sistema={system.pk} handleNewResponsability={handleNewResponsability} />
           </div>
         );
