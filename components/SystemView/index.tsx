@@ -12,25 +12,21 @@ import styles from "./styles.module.scss";
 interface ConditionProps {
   pk: string;
   descricao: string;
-  sistema: string;
 }
 
 interface ObligationProps {
   pk: string;
   descricao: string;
-  sistema: string;
 }
 
 interface SanctionProps {
   pk: string;
   descricao: string;
-  sistema: string;
 }
 
 interface ResponsabilityProps {
   pk: string;
   descricao: string;
-  sistema: string;
 }
 
 interface SystemProps {
