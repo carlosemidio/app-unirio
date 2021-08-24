@@ -111,7 +111,7 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
             width: '70%', 
             color: '#000000', 
             backgroundColor: '#bfbfbf', 
-            description: 'Estrutural'
+            description: 'Structural'
         },
         {
             height: 200, 
@@ -125,7 +125,7 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
             width: '70%',
             color: '#000000',
             backgroundColor: '#f2f2f2',
-            description: 'Imediato'
+            description: 'Immediate'
         }
     ]);
 
@@ -629,7 +629,7 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
                     height: impacts[2].height,
                     backgroundColor: impacts[2].backgroundColor,
                     color: impacts[2].color,
-                }}><p style={{ padding: 15 }}>{impacts[0].description}</p></div>
+                }}><p style={{ padding: 15 }}>{impacts[2].description}</p></div>
             </div>
             <ReactFlow
                 elements={elements}

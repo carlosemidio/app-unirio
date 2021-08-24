@@ -52,7 +52,7 @@ const Toobar = ({ onSave, onRestore, handleOpenImpactsChange, projectId }) => {
                         className={styles.siBTN}
                         title="System node"
                         onDragStart={(event) => onDragStart(event, 'SiNode')} 
-                        draggable>SI</button>
+                        draggable>IS</button>
                     <div 
                         onDragStart={(event) => onDragStart(event, 'ActorNode')} 
                         draggable>
