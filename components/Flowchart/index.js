@@ -24,6 +24,7 @@ import ACRForm from '../ACRForm';
 import Toobar from '../Toobar';
 import localforage from 'localforage';
 import SelectForm from '../SelectForm';
+import ACRSelectForm from '../ACRSelectForm';
 import SelectSignal from '../SelectSignal';
 import SiEdge from './Edges/SiEdge';
 import AcrEdge from './Edges/ACREdge';
@@ -554,16 +555,24 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
             case 'SiNode':
                 return (
                     newItem ? <SIForm key='systemForm' projeto={project.pk} handleNewSystem={handleNewSystem} /> 
-                    : <SelectForm options={ projectSystems.map(system => {
-                        return {name: system?.nome, value: system.pk};
-                    }) } type={type} handleSelectItem={handleSelectItem} handleCloseModal={handleCloseModal} />
+                    : <SelectForm 
+                        options={ projectSystems.map(system => {
+                            return {name: system?.nome, value: system.pk};
+                        }) } 
+                        type={type} 
+                        handleSelectItem={handleSelectItem} 
+                        handleCloseModal={handleCloseModal} />
                 );
             case 'ActorNode':
                 return (
                     newItem ? <ActorForm key='actorForm' projeto={project.pk} handleNewActor={handleNewActor} />
-                    : <SelectForm options={ projectActors.map(actor => {
-                        return {name: actor?.nome, value: actor.pk};
-                    }) } type={type} handleSelectItem={handleSelectItem} handleCloseModal={handleCloseModal} />
+                    : <SelectForm 
+                        options={ projectActors.map(actor => {
+                            return {name: actor?.nome, value: actor.pk};
+                        }) } 
+                        type={type} 
+                        handleSelectItem={handleSelectItem}
+                        handleCloseModal={handleCloseModal} />
                 );
             case 'VRNode':
                 return (
@@ -583,12 +592,31 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
                             ? <ACRForm key='ux' criteriaType={criteriaType} handleNewCriteria={handleNewCriteria} />
                             : <ACRForm key='iso' criteriaType={criteriaType} handleNewCriteria={handleNewCriteria} />)
                     : (
-                        criteriaType ? <SelectForm key='selectUX' options={ criteriaux.map(criteria => {
-                            return {name: criteria?.indicador, value: criteria.pk};
-                        }) } type={type} handleSelectItem={handleSelectItem} handleCloseModal={handleCloseModal} />
-                        : <SelectForm key='selectISO' options={ criteriaiso.map(criteria => {
-                            return {name: criteria?.indicador, value: criteria.pk};
-                        }) } type={type} handleSelectItem={handleSelectItem} handleCloseModal={handleCloseModal} />
+                        criteriaType ? 
+                            <ACRSelectForm 
+                                key='selectUX' 
+                                options={ criteriaux.map(criteria => {
+                                    return {
+                                        name: criteria?.indicador, 
+                                        value: criteria.pk,
+                                        criterio_accountability: criteria.criterio_accountability
+                                    };
+                                }) } 
+                                type={type} 
+                                handleSelectItem={handleSelectItem} 
+                                handleCloseModal={handleCloseModal} />
+                        : <ACRSelectForm 
+                            key='selectISO' 
+                            options={ criteriaiso.map(criteria => {
+                                return {
+                                    name: criteria?.indicador, 
+                                    value: criteria.pk, 
+                                    criterio_accountability: criteria.criterio_accountability
+                                };
+                            }) } 
+                            type={type} 
+                            handleSelectItem={handleSelectItem} 
+                            handleCloseModal={handleCloseModal} />
                     )
                 );
             default:
@@ -684,7 +712,11 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
                 <MarkerDefinition id="edge-marker-default" color="gray" />
                 <Controls />
             </ReactFlow>
-            <Toobar onSave={onSave} onRestore={onRestore} handleOpenImpactsChange={handleOpenImpactsChange} projectId={project.pk} />
+            <Toobar
+                onSave={onSave} 
+                onRestore={onRestore} 
+                handleOpenImpactsChange={handleOpenImpactsChange} 
+                projectId={project.pk} />
             <Modal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
@@ -703,15 +735,34 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
                         { (!addLine && !impactsChange && !viewingItem) ? switchModalTitle() : <></> }
                         {((currentNode?.type != 'TextNode') && !addLine && !impactsChange && !viewingItem) ? <FormControl component="fieldset">
                                 <RadioGroup aria-label="donationType" name="donationType1" style={{ display: 'flex', flexDirection: 'row' }}>
-                                    <FormControlLabel value="0" onChange={ event => setNewItem(false) } checked={!newItem} control={<Radio />} label="Select" />
-                                    <FormControlLabel value="1" onChange={ event => setNewItem(true) } checked={newItem} control={<Radio />} label="Add" />
+                                    <FormControlLabel 
+                                        value="0" 
+                                        onChange={ event => setNewItem(false) } 
+                                        checked={!newItem} control={<Radio />} 
+                                        label="Select" />
+                                    <FormControlLabel 
+                                        value="1" 
+                                        onChange={ event => setNewItem(true) } 
+                                        checked={newItem} 
+                                        control={<Radio />} 
+                                        label="Add" />
                                 </RadioGroup>
                             </FormControl> : <></>
                         }
                         {((currentNode?.type == 'ACRNode') && !addLine && !impactsChange && !viewingItem) ? <FormControl component="fieldset">
                                 <RadioGroup aria-label="donationType" name="donationType1" style={{ display: 'flex', flexDirection: 'row' }}>
-                                    <FormControlLabel value="ux" onChange={ event => setCriteriaType(true) } checked={criteriaType} control={<Radio />} label="UX" />
-                                    <FormControlLabel value="iso" onChange={ event => setCriteriaType(false) } checked={!criteriaType} control={<Radio />} label="Standard" />
+                                    <FormControlLabel
+                                        value="ux"
+                                        onChange={ event => setCriteriaType(true) }
+                                        checked={criteriaType}
+                                        control={<Radio />}
+                                        label="UX" />
+                                    <FormControlLabel
+                                        value="iso"
+                                        onChange={ event => setCriteriaType(false) }
+                                        checked={!criteriaType}
+                                        control={<Radio />}
+                                        label="Standard" />
                                 </RadioGroup>
                             </FormControl> : <></>
                         }
@@ -720,9 +771,24 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
                         { impactsChange ? <div>
                             <FormControl component="fieldset">
                                 <RadioGroup aria-label="impacts" name="impacts" style={{ display: 'flex', flexDirection: 'row' }}>
-                                    <FormControlLabel value="0" onChange={ event => setImpatcSelected(0) } checked={(impatcSelected == 0)} control={<Radio />} label="Impact 1" />
-                                    <FormControlLabel value="1" onChange={ event => setImpatcSelected(1) } checked={(impatcSelected == 1)} control={<Radio />} label="Impact 2" />
-                                    <FormControlLabel value="2" onChange={ event => setImpatcSelected(2) } checked={(impatcSelected == 2)} control={<Radio />} label="Impact 3" />
+                                    <FormControlLabel
+                                        value="0"
+                                        onChange={ event => setImpatcSelected(0) }
+                                        checked={(impatcSelected == 0)}
+                                        control={<Radio />}
+                                        label="Impact 1" />
+                                    <FormControlLabel
+                                        value="1"
+                                        onChange={ event => setImpatcSelected(1) }
+                                        checked={(impatcSelected == 1)}
+                                        control={<Radio />}
+                                        label="Impact 2" />
+                                    <FormControlLabel 
+                                        value="2"
+                                        onChange={ event => setImpatcSelected(2) }
+                                        checked={(impatcSelected == 2)}
+                                        control={<Radio />}
+                                        label="Impact 3" />
                                 </RadioGroup>
                             </FormControl>
                             <ImpactsForm 
