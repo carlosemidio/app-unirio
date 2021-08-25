@@ -14,11 +14,10 @@ export default function CustomEdge({
     strokeWidth: 3
   },
   data,
-  arrowHeadType,
   markerEndId,
 }) {
   const edgePath = getBezierPath({ sourceX, sourceY, sourcePosition, targetX, targetY, targetPosition });
-  const markerEnd = getMarkerEnd(arrowHeadType, markerEndId);
+  const markerEnd = getMarkerEnd('arrow', 'edge-marker-default');
 
   return (
     <>

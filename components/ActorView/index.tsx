@@ -87,7 +87,7 @@ const ActorView: React.FC<IProps> = ({ _actor, handleUpdateActor, handleCloseVie
                 <li key={condition.pk}>{condition.descricao}</li>
               ))}
             </ul>
-            <ConditionForm ator={actor.pk} handleNewCondition={handleNewCondition} />
+            <ConditionForm ator={actor.pk} handleNewCondition={handleNewCondition} handleCloseModal={handleCloseView} />
           </div>  
         );
         break;
@@ -97,7 +97,7 @@ const ActorView: React.FC<IProps> = ({ _actor, handleUpdateActor, handleCloseVie
             <ul className={styles.itemList}>
               {actor.obrigacoes.map(obligation => (
                 <li key={obligation.pk}>{obligation.descricao}</li>))}</ul>
-            <ObligationForm ator={actor.pk} handleNewObligation={handleNewObligation} />
+            <ObligationForm ator={actor.pk} handleNewObligation={handleNewObligation} handleCloseModal={handleCloseView} />
           </div>
         );
         break;
@@ -107,7 +107,7 @@ const ActorView: React.FC<IProps> = ({ _actor, handleUpdateActor, handleCloseVie
             <ul className={styles.itemList}>
               {actor.sancoes.map(sanction => (
                 <li key={sanction.pk}>{sanction.descricao}</li>))}</ul>
-            <SanctionForm ator={actor.pk} handleNewSanction={handleNewSanction} />
+            <SanctionForm ator={actor.pk} handleNewSanction={handleNewSanction} handleCloseModal={handleCloseView} />
           </div>
         );
         break;
@@ -117,7 +117,7 @@ const ActorView: React.FC<IProps> = ({ _actor, handleUpdateActor, handleCloseVie
             <ul className={styles.itemList}>
               {actor.responsabilidades.map(responsability => (
                 <li key={responsability.pk}>{responsability.descricao}</li>))}</ul>
-            <ResponsabilityForm ator={actor.pk} handleNewResponsability={handleNewResponsability} />
+            <ResponsabilityForm ator={actor.pk} handleNewResponsability={handleNewResponsability} handleCloseModal={handleCloseView} />
           </div>
         );
         break;
@@ -139,10 +139,10 @@ const ActorView: React.FC<IProps> = ({ _actor, handleUpdateActor, handleCloseVie
     <div>
       <FormControl component="fieldset">
         <RadioGroup aria-label="donationType" name="donationType1" style={{ display: 'flex', flexDirection: 'row' }}>
-          <FormControlLabel value="0" onChange={ event => setItem(0) } checked={(item == 0)} control={<Radio />} label="Condições" />
-          <FormControlLabel value="1" onChange={ event => setItem(1) } checked={(item == 1)} control={<Radio />} label="Obrigações" />
-          <FormControlLabel value="2" onChange={ event => setItem(2) } checked={(item == 2)} control={<Radio />} label="Sanções" />
-          <FormControlLabel value="3" onChange={ event => setItem(3) } checked={(item == 3)} control={<Radio />} label="Responsabilidades" />
+          <FormControlLabel value="0" onChange={ event => setItem(0) } checked={(item == 0)} control={<Radio />} label="Conditions" />
+          <FormControlLabel value="1" onChange={ event => setItem(1) } checked={(item == 1)} control={<Radio />} label="Obligations" />
+          <FormControlLabel value="2" onChange={ event => setItem(2) } checked={(item == 2)} control={<Radio />} label="Sanctions" />
+          <FormControlLabel value="3" onChange={ event => setItem(3) } checked={(item == 3)} control={<Radio />} label="Responsibilities" />
         </RadioGroup>
       </FormControl>
       {listItems()}

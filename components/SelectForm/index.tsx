@@ -29,6 +29,7 @@ interface FormValues {
   item: string;
   type: string;
   handleSelectItem: (id: string, type: string) => null;
+  handleCloseModal: () => void;
 }
 
 const form = (props: FormikProps<FormValues>) => {
@@ -54,12 +55,12 @@ const form = (props: FormikProps<FormValues>) => {
               className={styles.formControl}
               fullWidth
             >
-              <InputLabel id="select-item-label">Selecione</InputLabel>
+              <InputLabel id="select-item-label">Select</InputLabel>
               <Select
                 id="item"
                 labelId="select-item-label"
                 value={values.item}
-                label="Selecionar"
+                label="Select"
                 onChange={(event) => setFieldValue('item', event.target.value)}
                 onBlur={handleBlur}
                 error={touched.item && Boolean(errors.item)}
@@ -74,10 +75,10 @@ const form = (props: FormikProps<FormValues>) => {
           </CardContent>
           <CardActions className={styles.actions}>
             <Button type="submit" color="primary" disabled={isSubmitting}>
-              Selecionar
+              Select
             </Button>
-            <Button color="secondary" onClick={handleReset}>
-              Cancelar
+            <Button color="secondary" onClick={values.handleCloseModal}>
+              Cancel
             </Button>
           </CardActions>
         </Card>
@@ -91,15 +92,17 @@ interface MyFormProps {
   item: string;
   type: string;
   handleSelectItem: (id: string, type: string) => null;
+  handleCloseModal: () => void;
 }
 
 const Form = withFormik<MyFormProps, FormValues>({
-  mapPropsToValues: ({ options, item, type, handleSelectItem }) => {
+  mapPropsToValues: ({ options, item, type, handleSelectItem, handleCloseModal }) => {
     return {
       options: options || [],
       item: item || '',
       type: type || '',
       handleSelectItem: handleSelectItem,
+      handleCloseModal: handleCloseModal
     };
   },
 

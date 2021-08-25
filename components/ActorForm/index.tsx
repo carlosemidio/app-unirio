@@ -12,8 +12,8 @@ import * as yup from 'yup';
 import styles from "./styles.module.scss";
 
 const validationsForm = {
-  projeto: yup.number().required('O projeto é obrigatório'),
-  nome: yup.string().required('O nome é obrigatório'),
+  projeto: yup.number().required(),
+  nome: yup.string().required(),
 };
 
 interface Option {
@@ -48,7 +48,7 @@ const form = (props: FormikProps<FormValues>) => {
           <CardContent>
             <TextField
               id="nome"
-              label="Ator Responsável"
+              label="Actor name"
               value={values.nome}
               onChange={handleChange}
               onBlur={handleBlur}
@@ -58,24 +58,13 @@ const form = (props: FormikProps<FormValues>) => {
               variant="outlined"
               fullWidth
             />
-            <TextField
-              id="projeto"
-              label="Projeto"
-              type="text"
-              value={values.projeto}
-              error={touched.projeto && Boolean(errors.projeto)}
-              margin="dense"
-              variant="outlined"
-              disabled={true}
-              fullWidth
-            />
           </CardContent>
           <CardActions className={styles.actions}>
             <Button type="submit" color="primary" disabled={isSubmitting}>
-              Enviar
+              Add
             </Button>
             <Button color="secondary" onClick={handleReset}>
-              Cancelar
+              Cancel
             </Button>
           </CardActions>
         </Card>

@@ -19,6 +19,7 @@ const validationsForm = {
 interface FormValues {
   descricao: string;
   handleNewText: (data: Object) => null;
+  handleCloseModal: () => void;
 }
 
 const form = (props: FormikProps<FormValues>) => {
@@ -41,7 +42,7 @@ const form = (props: FormikProps<FormValues>) => {
           <CardContent>
             <TextField
               id="descricao"
-              label="Texto"
+              label="Text"
               value={values.descricao}
               onChange={handleChange}
               onBlur={handleBlur}
@@ -55,10 +56,10 @@ const form = (props: FormikProps<FormValues>) => {
           </CardContent>
           <CardActions className={styles.actions}>
             <Button type="submit" color="primary" disabled={isSubmitting}>
-              Adicionar texto
+              Add
             </Button>
-            <Button color="secondary" onClick={handleReset}>
-              Cancelar
+            <Button color="secondary" onClick={values.handleCloseModal}>
+              Cancel
             </Button>
           </CardActions>
         </Card>
@@ -71,13 +72,15 @@ const form = (props: FormikProps<FormValues>) => {
 interface MyFormProps {
   descricao: string;
   handleNewText: (data: Object) => null;
+  handleCloseModal: () => void;
 }
 
 const Form = withFormik<MyFormProps, FormValues>({
-  mapPropsToValues: ({ descricao, handleNewText }) => {
+  mapPropsToValues: ({ descricao, handleNewText, handleCloseModal }) => {
     return {
       descricao: descricao || '',
       handleNewText: handleNewText,
+      handleCloseModal: handleCloseModal
     };
   },
 

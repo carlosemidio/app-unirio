@@ -25,8 +25,10 @@ const ActorNode = (({ id, data }) => {
     >
       <Handle
         type="target"
-        position="top"
-        style={{ background: '#555' }}
+        position="left"
+        style={{
+          backgroundColor: 'green'
+        }}
         onConnect={(params) => console.log('handle onConnect', params)}
       />
       
@@ -36,7 +38,10 @@ const ActorNode = (({ id, data }) => {
       </span>
       <Handle
         type="source"
-        position="bottom"
+        position="right"
+        style={{
+          backgroundColor: 'red'
+        }}
       />
     </div>
   );

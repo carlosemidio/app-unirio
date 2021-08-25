@@ -63,7 +63,7 @@ const Toobar = ({ onSave, onRestore, handleOpenImpactsChange, projectId }) => {
                     </div>
                     <button 
                         className={styles.rBTN} 
-                        title="Vertice node"
+                        title="Vertex node"
                         onDragStart={(event) => onDragStart(event, 'VRNode')} 
                         draggable>R</button>
                     <span 
@@ -73,9 +73,9 @@ const Toobar = ({ onSave, onRestore, handleOpenImpactsChange, projectId }) => {
                         draggable>A</span>
                     <button 
                         className={styles.criteriaBTN}
-                        title="Acountability Criteria node" 
+                        title="Accountability Criteria" 
                         onDragStart={(event) => onDragStart(event, 'ACRNode')} 
-                        draggable>Acountability Criteria</button>
+                        draggable>Accountability Criteria</button>
                 </div>
             </Container>
         </div>

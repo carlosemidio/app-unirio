@@ -25,7 +25,9 @@ const SiNode = (({ id, data }) => {
       <Handle
         type="target"
         position="left"
-        style={{ background: '#555' }}
+        style={{
+          backgroundColor: 'green'
+        }}
         onConnect={(params) => console.log('handle onConnect', params)}
       />
       <span 
@@ -37,6 +39,9 @@ const SiNode = (({ id, data }) => {
       <Handle
         type="source"
         position="right"
+        style={{
+          backgroundColor: 'red'
+        }}
       />
     </div>
   );

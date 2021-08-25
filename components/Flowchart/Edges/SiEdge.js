@@ -14,15 +14,13 @@ export default function CustomEdge({
     strokeWidth: 3
   },
   data,
-  arrowHeadType,
-  markerEndId,
 }) {
   const edgePath = getBezierPath({ sourceX, sourceY, sourcePosition, targetX, targetY, targetPosition });
-  const markerEnd = getMarkerEnd(arrowHeadType, markerEndId);
+  const markerEnd = getMarkerEnd('arrow', 'edge-marker-red');
 
   return (
     <>
-      <path id={id} style={style} className="react-flow__edge-path" d={edgePath} markerEnd={markerEnd} />
+      <path id={id} style={style} className="react-flow__edge-path" d={edgePath} />
       <text>
         {/* <textPath href={`#${id}`} style={{ fontSize: '12px' }} startOffset="50%" textAnchor="middle">SiEdge</textPath> */}
       </text>

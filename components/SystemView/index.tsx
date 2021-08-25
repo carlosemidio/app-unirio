@@ -53,24 +53,28 @@ const SystemView: React.FC<IProps> = ({ _system, handleUpdateSystem, handleClose
     let auxSystem = {...system};
     auxSystem.condicoes.push(condition);
     setSystem(auxSystem);
+    handleUpdateSystem(auxSystem);
   }
 
   const handleNewObligation = (obligation: ObligationProps) => {
     let auxSystem = {...system};
     auxSystem.obrigacoes.push(obligation);
     setSystem(auxSystem);
+    handleUpdateSystem(auxSystem);
   }
 
   const handleNewSanction = (sanction: SanctionProps) => {
     let auxSystem = {...system};
     auxSystem.sancoes.push(sanction);
     setSystem(auxSystem);
+    handleUpdateSystem(auxSystem);
   }
 
   const handleNewResponsability = (responsability: ResponsabilityProps) => {
     let auxSystem = {...system};
     auxSystem.responsabilidades.push(responsability);
     setSystem(auxSystem);
+    handleUpdateSystem(auxSystem);
   }
 
   const listItems = () => {
@@ -83,7 +87,7 @@ const SystemView: React.FC<IProps> = ({ _system, handleUpdateSystem, handleClose
                 <li key={condition.pk}>{condition.descricao}</li>
               ))}
             </ul>
-            <ConditionForm sistema={system.pk} handleNewCondition={handleNewCondition} />
+            <ConditionForm sistema={system.pk} handleNewCondition={handleNewCondition} handleCloseModal={handleCloseView} />
           </div>  
         );
         break;
@@ -93,7 +97,7 @@ const SystemView: React.FC<IProps> = ({ _system, handleUpdateSystem, handleClose
             <ul className={styles.itemList}>
               {system.obrigacoes.map(obligation => (
                 <li key={obligation.pk}>{obligation.descricao}</li>))}</ul>
-            <ObligationForm sistema={system.pk} handleNewObligation={handleNewObligation} />
+            <ObligationForm sistema={system.pk} handleNewObligation={handleNewObligation} handleCloseModal={handleCloseView} />
           </div>
         );
         break;
@@ -103,7 +107,7 @@ const SystemView: React.FC<IProps> = ({ _system, handleUpdateSystem, handleClose
             <ul className={styles.itemList}>
               {system.sancoes.map(sanction => (
                 <li key={sanction.pk}>{sanction.descricao}</li>))}</ul>
-            <SanctionForm sistema={system.pk} handleNewSanction={handleNewSanction} />
+            <SanctionForm sistema={system.pk} handleNewSanction={handleNewSanction} handleCloseModal={handleCloseView} />
           </div>
         );
         break;
@@ -113,7 +117,7 @@ const SystemView: React.FC<IProps> = ({ _system, handleUpdateSystem, handleClose
             <ul className={styles.itemList}>
               {system.responsabilidades.map(responsability => (
                 <li key={responsability.pk}>{responsability.descricao}</li>))}</ul>
-            <ResponsabilityForm sistema={system.pk} handleNewResponsability={handleNewResponsability} />
+            <ResponsabilityForm sistema={system.pk} handleNewResponsability={handleNewResponsability} handleCloseModal={handleCloseView} />
           </div>
         );
         break;
@@ -130,15 +134,14 @@ const SystemView: React.FC<IProps> = ({ _system, handleUpdateSystem, handleClose
         projeto={system.projeto}
         nome={system.nome}
         handleUpdateSystem={handleUpdateSystem}
-        handleCloseModal={handleCloseView}
       />
     <div>
       <FormControl component="fieldset">
         <RadioGroup aria-label="donationType" name="donationType1" style={{ display: 'flex', flexDirection: 'row' }}>
-          <FormControlLabel value="0" onChange={ event => setItem(0) } checked={(item == 0)} control={<Radio />} label="Condições" />
-          <FormControlLabel value="1" onChange={ event => setItem(1) } checked={(item == 1)} control={<Radio />} label="Obrigações" />
-          <FormControlLabel value="2" onChange={ event => setItem(2) } checked={(item == 2)} control={<Radio />} label="Sanções" />
-          <FormControlLabel value="3" onChange={ event => setItem(3) } checked={(item == 3)} control={<Radio />} label="Responsabilidades" />
+          <FormControlLabel value="0" onChange={ event => setItem(0) } checked={(item == 0)} control={<Radio />} label="Conditions" />
+          <FormControlLabel value="1" onChange={ event => setItem(1) } checked={(item == 1)} control={<Radio />} label="Obligations" />
+          <FormControlLabel value="2" onChange={ event => setItem(2) } checked={(item == 2)} control={<Radio />} label="Sanctions" />
+          <FormControlLabel value="3" onChange={ event => setItem(3) } checked={(item == 3)} control={<Radio />} label="Responsibilities" />
         </RadioGroup>
       </FormControl>
       {listItems()}

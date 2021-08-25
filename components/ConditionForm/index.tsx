@@ -15,7 +15,7 @@ const validationsForm = {
   sistema: yup.number(),
   ator: yup.number(),
   vertice: yup.number(),
-  descricao: yup.string().required('A descrição é obrigatória'),
+  descricao: yup.string().required(),
 };
 
 interface ConditionProps {
@@ -30,6 +30,7 @@ interface FormValues {
   vertice?: string;
   descricao?: string;
   handleNewCondition: (condition: ConditionProps) => void;
+  handleCloseModal: () => void;
 }
 
 const form = (props: FormikProps<FormValues>) => {
@@ -52,7 +53,7 @@ const form = (props: FormikProps<FormValues>) => {
           <CardContent>
             <TextField
               id="descricao"
-              label="Descrição"
+              label="Description"
               value={values.descricao}
               onChange={handleChange}
               onBlur={handleBlur}
@@ -62,52 +63,13 @@ const form = (props: FormikProps<FormValues>) => {
               variant="outlined"
               fullWidth
             />
-            {(values.sistema != '') ?
-              <TextField
-                id="sistema"
-                label="Sistema"
-                type="text"
-                value={values.sistema}
-                error={touched.sistema && Boolean(errors.sistema)}
-                margin="dense"
-                variant="outlined"
-                disabled={true}
-                fullWidth
-              />: <></>
-            }
-            {(values.ator != '') ?
-              <TextField
-                id="ator"
-                label="Ator"
-                type="text"
-                value={values.ator}
-                error={touched.ator && Boolean(errors.ator)}
-                margin="dense"
-                variant="outlined"
-                disabled={true}
-                fullWidth
-              />: <></>
-            }
-            {(values.vertice != '') ?
-              <TextField
-                id="vertice"
-                label="Vértice"
-                type="text"
-                value={values.vertice}
-                error={touched.vertice && Boolean(errors.vertice)}
-                margin="dense"
-                variant="outlined"
-                disabled={true}
-                fullWidth
-              />: <></>
-            }
           </CardContent>
           <CardActions className={styles.actions}>
             <Button type="submit" color="primary" disabled={isSubmitting}>
-              Adicionar Condição
+              Add
             </Button>
-            <Button color="secondary" onClick={handleReset}>
-              Cancelar
+            <Button color="secondary" onClick={values.handleCloseModal}>
+              Cancel
             </Button>
           </CardActions>
         </Card>
@@ -122,16 +84,18 @@ interface MyFormProps {
   vertice?: string;
   descricao?: string;
   handleNewCondition: (condition: ConditionProps) => void;
+  handleCloseModal: () => void;
 }
 
 const Form = withFormik<MyFormProps, FormValues>({
-  mapPropsToValues: ({ sistema, ator, vertice, descricao, handleNewCondition }) => {
+  mapPropsToValues: ({ sistema, ator, vertice, descricao, handleNewCondition, handleCloseModal }) => {
     return {
       sistema: sistema || '',
       ator: ator || '',
       vertice: vertice || '',
       descricao: descricao || '',
       handleNewCondition: handleNewCondition,
+      handleCloseModal: handleCloseModal,
     };
   },
 

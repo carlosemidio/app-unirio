@@ -8,12 +8,13 @@ import {
 } from '@material-ui/core';
 import { withFormik, FormikProps } from 'formik';
 import * as yup from 'yup';
+import { FaEdit } from 'react-icons/fa';
 
 import styles from "./styles.module.scss";
 
 const validationsForm = {
-  projeto: yup.number().required('O projeto é obrigatório'),
-  descricao: yup.string().required('O descricao é obrigatório'),
+  projeto: yup.number().required(),
+  descricao: yup.string().required(),
 };
 
 // Shape of form values
@@ -45,7 +46,7 @@ const form = (props: FormikProps<FormValues>) => {
           <CardContent>
             <TextField
               id="descricao"
-              label="Descrição do Vértice de Responsabilidade"
+              label="Description"
               value={values.descricao}
               onChange={handleChange}
               onBlur={handleBlur}
@@ -55,24 +56,12 @@ const form = (props: FormikProps<FormValues>) => {
               variant="outlined"
               fullWidth
             />
-            <TextField
-              id="projeto"
-              label="Projeto"
-              type="text"
-              value={values.projeto}
-              error={touched.projeto && Boolean(errors.projeto)}
-              margin="dense"
-              variant="outlined"
-              disabled={true}
-              fullWidth
-            />
           </CardContent>
           <CardActions className={styles.actions}>
             <Button type="submit" color="primary" disabled={isSubmitting}>
-              Atualizar Vértice
-            </Button>
-            <Button color="secondary" onClick={values.handleCloseModal}>
-              Cancelar
+              <FaEdit 
+                fontSize={32}
+                title="Update system" />
             </Button>
           </CardActions>
         </Card>

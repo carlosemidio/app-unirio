@@ -64,55 +64,17 @@ const form = (props: FormikProps<FormValues>) => {
       <form onSubmit={handleSubmit}>
         <Card className={styles.card}>
           <CardContent>
-            <TextField
-              id="indicador"
-              label="Rótulo do Indicador de Accountability"
-              value={values.indicador}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              helperText={touched.indicador ? errors.indicador : ''}
-              error={touched.indicador && Boolean(errors.indicador)}
-              margin="dense"
-              variant="outlined"
-              fullWidth
-            />
-            <TextField
-              id="descricao"
-              label="Descrição do Indicador de Accountability"
-              value={values.descricao}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              helperText={touched.descricao ? errors.descricao : ''}
-              error={touched.descricao && Boolean(errors.descricao)}
-              margin="dense"
-              variant="outlined"
-              fullWidth
-            />
-            {
-              !values.criteriaType ? <TextField
-                id="nome_iso"
-                label="Regra ISO"
-                value={values.nome_iso}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                helperText={touched.nome_iso ? errors.nome_iso : ''}
-                error={touched.nome_iso && Boolean(errors.nome_iso)}
-                margin="dense"
-                variant="outlined"
-                fullWidth
-              /> : <></> 
-            }
-            <FormControl
+          <FormControl
               variant="outlined"
               className={styles.formControl}
               fullWidth
             >
-              <InputLabel id="select-system-label">Criterio accountability</InputLabel>
+              <InputLabel id="select-system-label">Accountability Criteria</InputLabel>
               <Select
                 id="criterio_accountability"
                 labelId="select-system-label"
                 value={values.criterio_accountability}
-                label="Criterio accountability"
+                label="Accountability Criteria"
                 onChange={(event) => setFieldValue('criterio_accountability', event.target.value)}
                 onBlur={handleBlur}
                 error={touched.criterio_accountability && Boolean(errors.criterio_accountability)}
@@ -124,13 +86,51 @@ const form = (props: FormikProps<FormValues>) => {
                 ))}
               </Select>
             </FormControl>
+            {
+              !values.criteriaType ? <TextField
+                id="nome_iso"
+                label="Source"
+                value={values.nome_iso}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                helperText={touched.nome_iso ? errors.nome_iso : ''}
+                error={touched.nome_iso && Boolean(errors.nome_iso)}
+                margin="dense"
+                variant="outlined"
+                fullWidth
+              /> : <></> 
+            }
+            <TextField
+              id="indicador"
+              label="Standard label"
+              value={values.indicador}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              helperText={touched.indicador ? errors.indicador : ''}
+              error={touched.indicador && Boolean(errors.indicador)}
+              margin="dense"
+              variant="outlined"
+              fullWidth
+            />
+            <TextField
+              id="descricao"
+              label="Description"
+              value={values.descricao}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              helperText={touched.descricao ? errors.descricao : ''}
+              error={touched.descricao && Boolean(errors.descricao)}
+              margin="dense"
+              variant="outlined"
+              fullWidth
+            />
           </CardContent>
           <CardActions className={styles.actions}>
             <Button type="submit" color="primary" disabled={isSubmitting}>
-              Enviar
+              Send
             </Button>
             <Button color="secondary" onClick={handleReset}>
-              Cancelar
+              Cancel
             </Button>
           </CardActions>
         </Card>

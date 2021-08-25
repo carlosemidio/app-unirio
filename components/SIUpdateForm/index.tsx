@@ -8,6 +8,7 @@ import {
 } from '@material-ui/core';
 import { withFormik, FormikProps } from 'formik';
 import * as yup from 'yup';
+import { FaEdit } from 'react-icons/fa';
 
 import styles from "./styles.module.scss";
 
@@ -22,7 +23,6 @@ interface FormValues {
   projeto: string;
   nome: string;
   handleUpdateSystem: (data: Object) => void;
-  handleCloseModal: () => void;
 }
 
 const form = (props: FormikProps<FormValues>) => {
@@ -45,7 +45,7 @@ const form = (props: FormikProps<FormValues>) => {
           <CardContent>
             <TextField
               id="nome"
-              label="Sistema Responsável"
+              label="System name"
               value={values.nome}
               onChange={handleChange}
               onBlur={handleBlur}
@@ -55,24 +55,12 @@ const form = (props: FormikProps<FormValues>) => {
               variant="outlined"
               fullWidth
             />
-            <TextField
-              id="projeto"
-              label="Projeto"
-              type="text"
-              value={values.projeto}
-              error={touched.projeto && Boolean(errors.projeto)}
-              margin="dense"
-              variant="outlined"
-              disabled={true}
-              fullWidth
-            />
           </CardContent>
           <CardActions className={styles.actions}>
             <Button type="submit" color="primary" disabled={isSubmitting}>
-              Atualizar Sistema
-            </Button>
-            <Button color="secondary" onClick={values.handleCloseModal}>
-              Cancelar
+            <FaEdit 
+              fontSize={32}
+              title="Update system" />
             </Button>
           </CardActions>
         </Card>
@@ -86,17 +74,15 @@ interface MyFormProps {
   projeto: string;
   nome: string;
   handleUpdateSystem: (data: Object) => void;
-  handleCloseModal: () => void;
 }
 
 const Form = withFormik<MyFormProps, FormValues>({
-  mapPropsToValues: ({ systemId, projeto, nome, handleUpdateSystem, handleCloseModal }) => {
+  mapPropsToValues: ({ systemId, projeto, nome, handleUpdateSystem }) => {
     return {
       systemId: systemId || '',
       projeto: projeto,
       nome: nome || '',
-      handleUpdateSystem: handleUpdateSystem,
-      handleCloseModal: handleCloseModal
+      handleUpdateSystem: handleUpdateSystem
     };
   },
 

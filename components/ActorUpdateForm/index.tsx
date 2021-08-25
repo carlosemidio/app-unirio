@@ -8,6 +8,7 @@ import {
 } from '@material-ui/core';
 import { withFormik, FormikProps } from 'formik';
 import * as yup from 'yup';
+import { FaEdit } from 'react-icons/fa';
 
 import styles from "./styles.module.scss";
 
@@ -45,7 +46,7 @@ const form = (props: FormikProps<FormValues>) => {
           <CardContent>
             <TextField
               id="nome"
-              label="Sistema Responsável"
+              label="Actor Name"
               value={values.nome}
               onChange={handleChange}
               onBlur={handleBlur}
@@ -55,24 +56,12 @@ const form = (props: FormikProps<FormValues>) => {
               variant="outlined"
               fullWidth
             />
-            <TextField
-              id="projeto"
-              label="Projeto"
-              type="text"
-              value={values.projeto}
-              error={touched.projeto && Boolean(errors.projeto)}
-              margin="dense"
-              variant="outlined"
-              disabled={true}
-              fullWidth
-            />
           </CardContent>
           <CardActions className={styles.actions}>
             <Button type="submit" color="primary" disabled={isSubmitting}>
-              Atualizar Ator
-            </Button>
-            <Button color="secondary" onClick={values.handleCloseModal}>
-              Cancelar
+              <FaEdit 
+                fontSize={32}
+                title="Update system" />
             </Button>
           </CardActions>
         </Card>
