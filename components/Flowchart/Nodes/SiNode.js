@@ -24,23 +24,43 @@ const SiNode = (({ id, data }) => {
       }}>
       <Handle
         type="target"
-        position="left"
+        position="right"
+        id="t-1"
         style={{
-          backgroundColor: 'green'
+          backgroundColor: 'red'
         }}
         onConnect={(params) => console.log('handle onConnect', params)}
       />
-      <span 
+      <Handle
+        type="target"
+        position="bottom"
+        id="t-2"
+        style={{
+          backgroundColor: 'red'
+        }}
+        onConnect={(params) => console.log('handle onConnect', params)}
+      />
+      <div 
         style={{
           borderRadius: '50%',
           color: '#ffffff',
           backgroundColor:  '#1f49c7',
-          padding: 10}}>{data?.title}</span>
+          padding: 10}}>{data?.title}
+      </div>
       <Handle
         type="source"
-        position="right"
+        position="left"
+        id="s-1"
         style={{
-          backgroundColor: 'red'
+          backgroundColor: 'green'
+        }}
+      />
+      <Handle
+        type="source"
+        position="top"
+        id="s-2"
+        style={{
+          backgroundColor: 'green'
         }}
       />
     </div>

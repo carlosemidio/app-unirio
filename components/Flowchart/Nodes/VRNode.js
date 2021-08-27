@@ -1,7 +1,8 @@
 import React, { memo, useState } from 'react';
 
 import { Handle } from 'react-flow-renderer';
-import AccessibilityNewIcon from '@material-ui/icons/AccessibilityNew';
+
+import Image from 'next/image';
 
 const VRNode = (({ id, data }) => {
   const [oldPosition, setOldPosition] = useState([0, 0]);
@@ -25,21 +26,44 @@ const VRNode = (({ id, data }) => {
     >
       <Handle
         type="target"
-        position="left"
+        position="right"
+        id="t-1"
         style={{
-          backgroundColor: 'green'
+          backgroundColor: 'red'
+        }}
+        onConnect={(params) => console.log('handle onConnect', params)}
+      />
+      <Handle
+        type="target"
+        position="bottom"
+        id="t-2"
+        style={{
+          backgroundColor: 'red'
         }}
         onConnect={(params) => console.log('handle onConnect', params)}
       />
       
-      <span style={{ color: '#000000', padding: 10}}>
+      <div style={{ color: '#000000', backgroundColor: '#FFFFFF', padding: 10}}>
+        <Image
+          width={15}
+          height={15}
+          src="/Vn-icon.png" />
         {data?.title}
-      </span>
+      </div>
       <Handle
         type="source"
-        position="right"
+        position="left"
+        id="s-1"
         style={{
-          backgroundColor: 'red'
+          backgroundColor: 'green'
+        }}
+      />
+      <Handle
+        type="source"
+        position="top"
+        id="s-2"
+        style={{
+          backgroundColor: 'green'
         }}
       />
     </div>

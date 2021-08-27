@@ -21,9 +21,18 @@ const ACRNode = (({ data }) => {
       </div>
       <Handle
         type="source"
-        position="right"
+        position="bottom"
+        id="s-1"
         style={{
-          backgroundColor: 'red'
+          backgroundColor: 'green'
+        }}
+      />
+      <Handle
+        type="source"
+        position="left"
+        id="s-2"
+        style={{
+          backgroundColor: 'green'
         }}
       />
     </>

@@ -25,22 +25,41 @@ const ActorNode = (({ id, data }) => {
     >
       <Handle
         type="target"
-        position="left"
+        position="right"
+        id="t-1"
         style={{
-          backgroundColor: 'green'
+          backgroundColor: 'red'
+        }}
+        onConnect={(params) => console.log('handle onConnect', params)}
+      />
+      <Handle
+        type="target"
+        position="bottom"
+        id="t-2"
+        style={{
+          backgroundColor: 'red'
         }}
         onConnect={(params) => console.log('handle onConnect', params)}
       />
       
-      <span style={{ color: '#000000', padding: 10}}>
+      <div style={{ color: '#000000', padding: 10, backgroundColor:  '#FFFFFF'}}>
         <AccessibilityNewIcon />
         {data?.title}
-      </span>
+      </div>
       <Handle
         type="source"
-        position="right"
+        position="left"
+        id="s-1"
         style={{
-          backgroundColor: 'red'
+          backgroundColor: 'green'
+        }}
+      />
+      <Handle
+        type="source"
+        position="top"
+        id="s-2"
+        style={{
+          backgroundColor: 'green'
         }}
       />
     </div>

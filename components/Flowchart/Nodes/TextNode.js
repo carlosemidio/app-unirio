@@ -2,26 +2,50 @@ import React, { memo } from 'react';
 
 import { Handle } from 'react-flow-renderer';
 
+import Image from 'next/image';
+
 const TextNode = (({ data }) => {
   return (
     <>
       <Handle
         type="target"
-        position="left"
+        position="right"
+        id="t-1"
         style={{
-          backgroundColor: 'green'
+          backgroundColor: 'red'
         }}
         onConnect={(params) => console.log('handle onConnect', params)}
       />
-      
-      <span style={{ color: '#000000', padding: 10, fontStyle: 'italic'}}>
-        {data?.title}
-      </span>
       <Handle
-        type="source"
-        position="right"
+        type="target"
+        position="bottom"
+        id="t-2"
         style={{
           backgroundColor: 'red'
+        }}
+        onConnect={(params) => console.log('handle onConnect', params)}
+      />
+      <div style={{ color: '#000000', padding: 10, backgroundColor: '#FFFFFF', fontStyle: 'italic'}}>
+        {/*Cara tenho certeza que isso aqui é gambiarra, desculpa. Não consegui arrumar de outro jeito. A ideia é dar um espaço entre a imagem e o texto*/}
+        <p><Image
+          width={12}
+          height={12}
+          src="/text-icon.png" /> {data?.title}</p>
+      </div>
+      <Handle
+        type="source"
+        position="left"
+        id="s-1"
+        style={{
+          backgroundColor: 'green'
+        }}
+      />
+      <Handle
+        type="source"
+        position="top"
+        id="s-2"
+        style={{
+          backgroundColor: 'green'
         }}
       />
     </>
