@@ -81,6 +81,7 @@ const Toobar = ({ onSave, onRestore, openHelp, handleOpenImpactsChange, projectI
                         width={45}
                         height={45}
                         className={styles.aBTN}
+                        alt="Text node image"
                         title="Text node" 
                         onDragStart={(event) => onDragStart(event, 'TextNode')} 
                         draggable
