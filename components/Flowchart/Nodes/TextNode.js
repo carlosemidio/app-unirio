@@ -27,10 +27,11 @@ const TextNode = (({ data }) => {
       />
       <div style={{ color: '#000000', padding: 10, backgroundColor: '#FFFFFF', fontStyle: 'italic'}}>
         {/*Cara tenho certeza que isso aqui é gambiarra, desculpa. Não consegui arrumar de outro jeito. A ideia é dar um espaço entre a imagem e o texto*/}
-        <p><Image
-          width={12}
-          height={12}
-          src="/text-icon.png" /> {data?.title}</p>
+        <Image
+          width={20}
+          height={20}
+          src="/text-icon.png" />
+        <p>{data?.title}</p>
       </div>
       <Handle
         type="source"

@@ -45,8 +45,8 @@ const VRNode = (({ id, data }) => {
       
       <div style={{ color: '#000000', backgroundColor: '#FFFFFF', padding: 10}}>
         <Image
-          width={15}
-          height={15}
+          width={20}
+          height={20}
           src="/Vn-icon.png" />
         {data?.title}
       </div>

@@ -68,7 +68,7 @@ const Toobar = ({ onSave, onRestore, handleOpenImpactsChange, projectId }) => {
                         title="Vertex node"
                         onDragStart={(event) => onDragStart(event, 'VRNode')} 
                         draggable
-                        src="/vn-icon.jpeg" />
+                        src="/Vn-icon.png" />
                     <Image
                         width={45}
                         height={45}
@@ -76,7 +76,7 @@ const Toobar = ({ onSave, onRestore, handleOpenImpactsChange, projectId }) => {
                         title="Text node" 
                         onDragStart={(event) => onDragStart(event, 'TextNode')} 
                         draggable
-                        src="/text-icon.jpeg" />
+                        src="/text-icon.png" />
                     <button 
                         className={styles.criteriaBTN}
                         title="Accountability Criteria" 
