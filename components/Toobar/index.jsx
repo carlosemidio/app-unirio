@@ -31,6 +31,7 @@ const Toobar = ({ onSave, onRestore, openHelp, handleOpenImpactsChange, projectI
                         height={24}
                         className={styles.itemsLeftBTN}
                         onClick={handleOpenImpactsChange}
+                        alt="Change time impacts image"
                         title="Change time impacts"
                         src="/time-impacts.jpeg" />
                     
@@ -38,6 +39,7 @@ const Toobar = ({ onSave, onRestore, openHelp, handleOpenImpactsChange, projectI
                         width={24}
                         height={24}
                         className={styles.itemsLeftBTN}
+                        alt="Generate report image"
                         title="Generate report"
                         onClick={async () => {
                             if (process.browser) {
@@ -69,7 +71,8 @@ const Toobar = ({ onSave, onRestore, openHelp, handleOpenImpactsChange, projectI
                     <Image
                         width={50}
                         height={45}
-                        className={styles.rBTN} 
+                        className={styles.rBTN}
+                        alt="Vertex node image"
                         title="Vertex node"
                         onDragStart={(event) => onDragStart(event, 'VRNode')} 
                         draggable

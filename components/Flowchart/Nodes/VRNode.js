@@ -47,7 +47,8 @@ const VRNode = (({ id, data }) => {
         <Image
           width={20}
           height={20}
-          src="/Vn-icon.png" />
+          src="/Vn-icon.png"
+          alt="Vertex Node image" />
         {data?.title}
       </div>
       <Handle

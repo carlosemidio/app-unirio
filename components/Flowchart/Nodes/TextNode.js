@@ -30,7 +30,8 @@ const TextNode = (({ data }) => {
         <Image
           width={20}
           height={20}
-          src="/text-icon.png" />
+          src="/text-icon.png"
+          alt="Text Node image" />
         {data?.title}
       </div>
       <Handle

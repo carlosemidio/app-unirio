@@ -32,7 +32,7 @@ const Home: React.FC<IProps> = ({ project, systems, actors, vertices, criteriaUX
       <main className={styles.main} style={{ width: '100%', height: '100%' }}>
         <ReactFlowProvider>
           <OverviewFlow 
-            project={project} 
+            _project={project} 
             systems={orderBy(systems, ['pk'], ['desc'])}
             actors={orderBy(actors, ['pk'], ['desc'])}
             vertices={orderBy(vertices, ['pk'], ['desc'])}

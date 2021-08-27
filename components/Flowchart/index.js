@@ -86,8 +86,9 @@ let data = [];
 let currentNode = null;
 let currentLine = [];
 
-const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaISO }) => {
+const SaveRestore = ({ _project, systems, actors, vertices, criteriaUX, criteriaISO }) => {
     const classes = useStyles();
+    const [project, setProject ] = useState(_project);
     const [projectSystems, setProjectSystems ] = useState(systems);
     const [projectActors, setProjectActors ] = useState(actors);
     const [projectVertices, setProjectVertices ] = useState(vertices);
@@ -516,14 +517,20 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
                 fetch(`${process.env.NEXT_PUBLIC_API_URL}/projetos/${project.pk}/`, requestOptions)
                   .then((response) => response.json())
                   .then((data) => {
-                    project = data;
+                    setProject(data);
                     notify();
                   });
               }, 1000);
         }
-    }, [rfInstance, impacts]);
+    }, [project, rfInstance, impacts]);
 
     const onRestore = useCallback(() => {
+        const handleViewItem = (node) => {
+            currentNode = node;
+            handleOpenModal();
+            setViewingItem(true);
+        }
+
         const restoreFlow = async () => {
             if (project.diagram) {
                 const flow = await project.diagram.flow;
@@ -547,7 +554,7 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
         };
 
         restoreFlow();
-    }, [setElements, transform]);
+    }, [ project, setElements, transform]);
 
     const switchModalTitle = () => {
         const type = currentNode?.type;
@@ -698,7 +705,7 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
               descriptionElement.focus();
             }
           }
-    }, [help]);
+    }, [help, onRestore]);
 
     return (
         <div style={{ width: '100%', height: '100%', background: 'transparent' }} ref={reactFlowWrapper}>
