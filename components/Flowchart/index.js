@@ -599,7 +599,8 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
                                     return {
                                         name: criteria?.indicador, 
                                         value: criteria.pk,
-                                        criterio_accountability: criteria.criterio_accountability
+                                        criterio_accountability: criteria.criterio_accountability,
+                                        description: criteria.descricao
                                     };
                                 }) } 
                                 type={type} 
@@ -611,7 +612,8 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
                                 return {
                                     name: criteria?.indicador, 
                                     value: criteria.pk, 
-                                    criterio_accountability: criteria.criterio_accountability
+                                    criterio_accountability: criteria.criterio_accountability,
+                                    description: criteria.descricao
                                 };
                             }) } 
                             type={type} 
