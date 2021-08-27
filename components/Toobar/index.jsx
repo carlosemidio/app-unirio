@@ -61,16 +61,22 @@ const Toobar = ({ onSave, onRestore, handleOpenImpactsChange, projectId }) => {
                             titleAccess="Actor node"
                             className={styles.iconBTN}/>
                     </div>
-                    <button 
+                    <Image
+                        width={50}
+                        height={45}
                         className={styles.rBTN} 
                         title="Vertex node"
                         onDragStart={(event) => onDragStart(event, 'VRNode')} 
-                        draggable>R</button>
-                    <span 
+                        draggable
+                        src="/vn-icon.jpeg" />
+                    <Image
+                        width={45}
+                        height={45}
                         className={styles.aBTN}
                         title="Text node" 
                         onDragStart={(event) => onDragStart(event, 'TextNode')} 
-                        draggable>A</span>
+                        draggable
+                        src="/text-icon.jpeg" />
                     <button 
                         className={styles.criteriaBTN}
                         title="Accountability Criteria" 
