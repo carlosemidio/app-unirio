@@ -34,6 +34,7 @@ import SystemView from '../SystemView';
 import ActorView from '../ActorView';
 import VerticeView from '../VerticeView';
 import { MarkerDefinition } from '../MarkerDefinition';
+import { toast } from 'react-toastify';
 
 const useStyles = makeStyles((theme) => ({
     modal: {
@@ -100,6 +101,18 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
     const [viewingItem, setViewingItem] = useState(false);
 
     const [impactsChange, setImpactsChange] = useState(false);
+
+    const notify = () => {
+        toast.success('Flow saved!', {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
+    }
 
     const handleOpenImpactsChange = () => {
         setImpactsChange(true);
@@ -180,7 +193,6 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
             })
         });
 
-        handleCloseModal();
         onSave();
     }
 
@@ -212,7 +224,6 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
             })
         });
 
-        handleCloseModal();
         onSave();
     }
 
@@ -244,7 +255,6 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
             })
         });
 
-        handleCloseModal();
         onSave();
     }
 
@@ -485,7 +495,7 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
                   .then((response) => response.json())
                   .then((data) => {
                     project = data;
-                    alert('Flow saved');
+                    notify();
                   });
               }, 1000);
         }

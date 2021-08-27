@@ -63,7 +63,7 @@ const ACRForm = (props: FormikProps<FormValues>) => {
     }
   ];
 
-  const [criteria, setCriteria] = useState('Engajamento');
+  const [criteria, setCriteria] = useState('');
   const [description, setDescription] = useState('');
   
   const getDescription = (value:string) => {
@@ -82,12 +82,12 @@ const ACRForm = (props: FormikProps<FormValues>) => {
               className={styles.formControl}
               fullWidth
             >
-              <InputLabel id="select-item-label">Criteria</InputLabel>
+              <InputLabel id="select-system-label">Accountability Criteria</InputLabel>
               <Select
                 id="item"
                 labelId="select-item-label"
                 value={criteria}
-                label="Criteria"
+                label="Accountability Criteria"
                 onChange={(event) => {
                   setDescription('');
                   setCriteria(event.target.value as string);

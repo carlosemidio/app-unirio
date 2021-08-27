@@ -5,6 +5,7 @@ import { ReactFlowProvider } from 'react-flow-renderer';
 import OverviewFlow from '../components/Flowchart';
 import { GetServerSideProps } from 'next';
 import { orderBy } from 'lodash';
+import { ToastContainer } from 'react-toastify';
 
 import styles from '../styles/Home.module.css'
 
@@ -52,6 +53,17 @@ const Home: React.FC<IProps> = ({ project, systems, actors, vertices, criteriaUX
           </span>
         </a>
       </footer> */}
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   )
 }
