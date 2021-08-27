@@ -131,8 +131,8 @@ const ACRForm = (props: FormikProps<FormValues>) => {
                 })}
               </Select>
             </FormControl>
+            <div className={styles.description}>{description}</div>
           </CardContent>
-          <div>{description}</div>
           <CardActions className={styles.actions}>
             <Button type="submit" color="primary" disabled={isSubmitting}>
               Select
