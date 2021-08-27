@@ -31,7 +31,7 @@ const TextNode = (({ data }) => {
           width={20}
           height={20}
           src="/text-icon.png" />
-        <p>{data?.title}</p>
+        {data?.title}
       </div>
       <Handle
         type="source"

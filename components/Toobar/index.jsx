@@ -1,12 +1,12 @@
 import React from 'react';
 import { Container } from '@material-ui/core';
-import {Save as SaveIcon, ArrowBack as ArrowBackIcon, Group as GroupIcon } from '@material-ui/icons';
+import {Save as SaveIcon, ArrowBack as ArrowBackIcon, Group as GroupIcon, Help as HelpIcon } from '@material-ui/icons';
 import { FaEdit } from 'react-icons/fa';
 import Image from 'next/image';
 
 import styles from "./styles.module.scss"
 
-const Toobar = ({ onSave, onRestore, handleOpenImpactsChange, projectId }) => {
+const Toobar = ({ onSave, onRestore, openHelp, handleOpenImpactsChange, projectId }) => {
     const onDragStart = (event, nodeType) => {
         event.dataTransfer.setData('application/reactflow', nodeType);
         event.dataTransfer.effectAllowed = 'move';
@@ -46,6 +46,11 @@ const Toobar = ({ onSave, onRestore, handleOpenImpactsChange, projectId }) => {
                             }}
                         }
                         src="/report.jpeg" />
+                    <HelpIcon 
+                        fontSize="large" 
+                        onClick={openHelp}
+                        titleAccess="Help"
+                        className={styles.itemsLeftBTN} />
                 </div>
                 <div className={styles.itemsRight}>
                     <button 

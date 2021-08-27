@@ -3,6 +3,12 @@ import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 import ReactFlow, {
   removeElements,
@@ -35,20 +41,21 @@ import ActorView from '../ActorView';
 import VerticeView from '../VerticeView';
 import { MarkerDefinition } from '../MarkerDefinition';
 import { toast } from 'react-toastify';
+import Help from '../Help';
 
 const useStyles = makeStyles((theme) => ({
     modal: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     paper: {
-      backgroundColor: theme.palette.background.paper,
-      border: '2px solid #000',
-      boxShadow: theme.shadows[5],
-      padding: theme.spacing(2, 4, 3),
-      display: 'flex',
-      flexDirection: 'column'
+        backgroundColor: theme.palette.background.paper,
+        border: '2px solid #000',
+        boxShadow: theme.shadows[5],
+        padding: theme.spacing(2, 4, 3),
+        display: 'flex',
+        flexDirection: 'column'
     },
   }));
 
@@ -101,6 +108,17 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
     const [viewingItem, setViewingItem] = useState(false);
 
     const [impactsChange, setImpactsChange] = useState(false);
+    const [help, setHelp] = useState(false);
+
+    const handleOpenHelp = () => {
+        setHelp(true);
+    }
+
+    const handleCloseHelp = () => {
+        setHelp(false);
+    }
+
+    const descriptionElementRef = React.useRef(null);
 
     const notify = () => {
         toast.success('Flow saved!', {
@@ -325,6 +343,10 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
 
         if (viewingItem) {
             setViewingItem(false);
+        }
+
+        if (help) {
+            setHelp(false);
         }
     }
 
@@ -670,7 +692,13 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
 
     useEffect(() => {
         onRestore();
-    }, []);
+        if (help) {
+            const { current: descriptionElement } = descriptionElementRef;
+            if (descriptionElement !== null) {
+              descriptionElement.focus();
+            }
+          }
+    }, [help]);
 
     return (
         <div style={{ width: '100%', height: '100%', background: 'transparent' }} ref={reactFlowWrapper}>
@@ -726,7 +754,8 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
             </ReactFlow>
             <Toobar
                 onSave={onSave} 
-                onRestore={onRestore} 
+                onRestore={onRestore}
+                openHelp={handleOpenHelp}
                 handleOpenImpactsChange={handleOpenImpactsChange} 
                 projectId={project.pk} />
             <Modal
@@ -745,7 +774,7 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
                     <div className={classes.paper}>
                         { viewingItem ? switchModalTitle() : <></> }
                         { (!addLine && !impactsChange && !viewingItem) ? switchModalTitle() : <></> }
-                        {((currentNode?.type != 'TextNode') && !addLine && !impactsChange && !viewingItem) ? <FormControl component="fieldset">
+                        {((currentNode?.type != 'TextNode') && !addLine && !impactsChange && !viewingItem && !help) ? <FormControl component="fieldset">
                                 <RadioGroup aria-label="donationType" name="donationType1" style={{ display: 'flex', flexDirection: 'row' }}>
                                     <FormControlLabel 
                                         value="0" 
@@ -812,6 +841,30 @@ const SaveRestore = ({ project, systems, actors, vertices, criteriaUX, criteriaI
                     </div>
                 </Fade>
             </Modal>
+
+            <Dialog
+                open={help}
+                onClose={handleCloseHelp}
+                scroll={'paper'}
+                aria-labelledby="scroll-dialog-title"
+                aria-describedby="scroll-dialog-description"
+            >
+                <DialogTitle id="scroll-dialog-title">Help</DialogTitle>
+                <DialogContent dividers={true}>
+                    <DialogContentText
+                        id="scroll-dialog-description"
+                        ref={descriptionElementRef}
+                        tabIndex={-1}
+                    >
+                        <Help />
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                <Button onClick={handleCloseHelp} color="primary">
+                    Close
+                </Button>
+                </DialogActions>
+            </Dialog>
         </div>
     );
 };
